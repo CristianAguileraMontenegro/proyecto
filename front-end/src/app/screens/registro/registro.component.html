@@ -1,0 +1,73 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-sm-5">
+            <form [formGroup]="formulario" (ngSubmit)="validacion1()" novalidate>
+                <div>
+                    <label for="correo" class="form-label">Correo de usuario</label>
+                    <input id="correo" class="form-control" type="text" formControlName="correo">
+                    <div *ngIf="formulario.controls['correo'].invalid && (formulario.controls['correo'].dirty || formulario.controls['correo'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                        <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                        <div *ngIf="formulario.controls['correo'].hasError('required')"> <!--hasError determina el tipo de error-->
+                            Correo de usuario requerido
+                        </div>
+                        
+                    </div>
+                    <div *ngIf="validacionMensajeCorreoArtista()" class="alert alert-danger" > 
+                            Correo de artista ya en uso
+                    </div>
+                </div>
+                <div>
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <input id="contrasena" class="form-control" type="password" formControlName="contrasena" >
+                    <div *ngIf="formulario.controls['contrasena'].invalid && (formulario.controls['contrasena'].dirty || formulario.controls['contrasena'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                    <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                        <div *ngIf="formulario.controls['contrasena'].hasError('required')"> <!--hasError determina el tipo de error-->
+                            Contraseña requerida
+                        </div>
+                        <div *ngIf="formulario.controls['contrasena'].hasError('minlength')"> <!--hasError determina el tipo de error-->
+                            Minimo de caracteres requeridos 5
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label for="nombre" class="form-label">Nombre de usuario</label>
+                    <input id="nombre" class="form-control" type="text" formControlName="nombre">
+                    <div *ngIf="formulario.controls['nombre'].invalid && (formulario.controls['nombre'].dirty || formulario.controls['nombre'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                        <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                        <div *ngIf="formulario.controls['nombre'].hasError('required')"> <!--hasError determina el tipo de error-->
+                            Nombre de artista requerido
+                        </div>
+                        
+                    </div>
+                </div>
+                <div>
+                    <label for="nombreArtistico" class="form-label">Nombre Artistico</label>
+                    <input id="nombreArtistico" class="form-control" type="text" formControlName="nombreArtistico">
+                    <div *ngIf="formulario.controls['nombreArtistico'].invalid && (formulario.controls['nombreArtistico'].dirty || formulario.controls['nombreArtistico'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                        <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                        <div *ngIf="formulario.controls['nombreArtistico'].hasError('required')"> <!--hasError determina el tipo de error-->
+                            Nombre de artista requerido
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label for="nacionalidad" class="form-label">Nacionalidad</label>
+                    <input id="nacionalidad" class="form-control" type="text" formControlName="nacionalidad">
+                    <div *ngIf="formulario.controls['nacionalidad'].invalid && (formulario.controls['nacionalidad'].dirty || formulario.controls['nacionalidad'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                        <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                        <div *ngIf="formulario.controls['nacionalidad'].hasError('required')"> <!--hasError determina el tipo de error-->
+                            Nacionalidad de artista requerido
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="validacionMensajeArtistaCreado()" class = "alert alert-success">
+                    Artista Creado
+                </div>
+                <div>
+                    <button class="btn btn-primary" type="submit" [disabled]="!formulario.valid" >Crear usuario</button> 
+                    <button class="btn btn-primary" type="button" [routerLink]="['/inicio']">Volver Inicio</button> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

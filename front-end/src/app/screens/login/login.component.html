@@ -1,0 +1,28 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-sm-5">
+            <h1>Inicio Sesión</h1>
+            <p [routerLink]="['/registro']">¿No tienes cuenta?</p>
+            <form [formGroup]="formulario" (ngSubmit)="validacion()" novalidate>
+                <div>
+                    <label for="correo" class="form-label">Correo</label>
+                    <input id="correo" class="form-control" type="text" formControlName="correo">
+                    <div *ngIf="!validarCorreoIngresado() && validarIngreso()" class="alert alert-danger"> 
+                            Correo invalido
+                    </div>
+                </div>
+                <div>
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <input id="contrasena" class="form-control" type="password" formControlName="contrasena" >
+                    <div *ngIf="flagContrasenaGeneral == false" class="alert alert-danger"> 
+                        Contraseña de usuario incorrecto
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary" type="submit" [disabled]="!formulario.valid" (click)="verificarSiPuedeIrARuta()">Ingresar</button> <!--!Formulario.valid indica si el formulario esta correcto, viene incorrecto lo que con ! pasa a correcto-->
+                    
+                 </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+
+
+
+
+
+//imagen
+
+#img{
+    position: relative;
+    height: 30%;
+}
+
+
+
+
+//barra de busqueda
+.input-rounded {
+    border-radius: 25px;
+    border: 2px solid rgb(255, 255, 255);
+    background-color: rgb(115, 123, 123);
+    padding: 20px; 
+    width: 200px;
+    height: 15px; 
+}
+
+#busqueda{
+    width: 50%;
+    padding: 15px;
+    margin:4px;
+    box-sizing: border-box;
+    padding-left:60px;
+}
+
+#busquedaContenedor{
+    position: relative;
+}
+
+#busquedaContenedor span {
+    position:absolute;
+    left:0;
+    top:10px;
+    padding:10px 10px;
+    color:#30A3F1;
+}
