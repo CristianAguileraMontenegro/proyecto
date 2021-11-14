@@ -1,0 +1,89 @@
+<div class="container-fluid" id="contenedorDePerfil">
+    <div class="row">
+        <div class="col-md-5 col-sm-3">
+            <div id="contenedorDeTitulo">
+                <h1>Galeria</h1>
+            </div>
+            
+            <div id="contenedorImagen">
+                <span class="material-icons" (click)="modificarImagen()">edit</span>
+                <input id="fotoDePerfil" (change)="capturarImagenPerfil($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg" style="display: none;" >
+                <img [src]="imgenUrl" alt="" id="imagen">
+                
+            </div>
+
+            <div id="contenedorBotones">
+                <button id="botonEditarPerfil" type="button" (click)="llevarAEdicion()">Editar tu perfil</button>
+                <button id="botonAgregarObra" type="button" (click)="mostarIngresoObra()">Agregar obras</button>
+                <form [formGroup]="formulario" (ngSubmit)="agregarImagen()" novalidate style="display: none;" id="formularioAgregarObra">
+                    <div>
+                        <label for="nombreObra" class="form-label">Nombre obra</label>
+                        <input id="nombreObra" class="form-control" type="text" formControlName="nombreObra">
+                        <div *ngIf="formulario.controls['nombreObra'].invalid && (formulario.controls['nombreObra'].dirty || formulario.controls['nombreObra'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                            <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                                <div *ngIf="formulario.controls['nombreObra'].hasError('required')"> <!--hasError determina el tipo de error-->
+                                    Nombre de la obra requerido
+                                </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="descripcionObra" class="form-label">Descripcion obra</label>
+                        <input id="descripcionObra" class="form-control" type="text" formControlName="descripcionObra">
+                        <div *ngIf="formulario.controls['descripcionObra'].invalid && (formulario.controls['descripcionObra'].dirty || formulario.controls['descripcionObra'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                            <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                                <div *ngIf="formulario.controls['descripcionObra'].hasError('required')"> <!--hasError determina el tipo de error-->
+                                    Descripcion de la obra requerida
+                                </div>
+                        </div>
+                    </div>
+                    <div>
+                        <input id="obras" class="form-control" formControlName="obras" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg" >
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" type="submit" [disabled]="!formulario.valid" >Agregar imagen</button>
+                    </div>  
+                </form>
+                
+            </div>
+
+            <div id="contenedorDatosPersonales">
+                <p>{{artistaActual.nombreReal}}</p>
+                <p>{{artistaActual.nombreArtista}}</p>
+                <p>{{artistaActual.correo}}</p>
+                <p>{{artistaActual.nacionalidad}}</p>
+            </div>
+        </div>
+        <div class="col-md-7 col-sm-4" id="contenedorDeObras" *ngIf="hayObras == true"> <!--Esto debe ser un ngif-->
+           <!--dentro debe de tener un ngfor qu recorra el arreglo de obras-->
+            <div>
+                <label for="estilo">Estilo</label>
+                <select (change)="elegirOpcion($event)" aria-label="Default select example" id="estilo">
+                    <option value="" disabled selected>Select</option>
+                    <option value="2">2x2</option>
+                    <option value="3">3x3</option>
+                    <option value="4">4x4</option>
+                </select>
+            </div>
+
+            <div class="container">
+                <div class="row" *ngIf="opcionDeDispocicionSeleccionada == 2">
+                    <div class="col-6" *ngFor="let item of almacenadorDeImagenes">
+                        <img src="{{item}}" alt="" class="obras">
+                    </div>
+                </div>
+                <div class="row" *ngIf="opcionDeDispocicionSeleccionada == 3">
+                    <div class="col-4" *ngFor="let item of almacenadorDeImagenes">
+                        <img src="{{item}}" alt="" class="obras">
+                    </div>
+                </div>
+                <div class="row" *ngIf="opcionDeDispocicionSeleccionada == 4">
+                    <div class="col-3" *ngFor="let item of almacenadorDeImagenes">
+                        <img src="{{item}}" alt="" class="obras">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -31,7 +31,7 @@
                 </div>
                 <div>
                     <label for="nombre" class="form-label">Nombre de usuario</label>
-                    <input id="nombre" class="form-control" type="text" value="critsian" formControlName="nombre" >
+                    <input id="nombre" class="form-control" type="text" formControlName="nombre">
                     <div *ngIf="formulario.controls['nombre'].invalid && (formulario.controls['nombre'].dirty || formulario.controls['nombre'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
                         <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
                         <div *ngIf="formulario.controls['nombre'].hasError('required')"> <!--hasError determina el tipo de error-->
@@ -39,7 +39,6 @@
                         </div>
                         
                     </div>
-                    
                 </div>
                 <div>
                     <label for="nombreArtistico" class="form-label">Nombre Artistico</label>
@@ -47,11 +46,8 @@
                     <div *ngIf="formulario.controls['nombreArtistico'].invalid && (formulario.controls['nombreArtistico'].dirty || formulario.controls['nombreArtistico'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
                         <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
                         <div *ngIf="formulario.controls['nombreArtistico'].hasError('required')"> <!--hasError determina el tipo de error-->
-                            Nombre Artistico requerido
+                            Nombre de artista requerido
                         </div>
-                    </div>
-                    <div *ngIf="validacionNombreArtistico()" class="alert alert-danger" > 
-                        Nombre Artistico requerido ya en uso
                     </div>
                 </div>
                 <div>
@@ -64,19 +60,16 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <label for="fotoDePerfil" class="form-label">Foto De Perfil</label>
-                    <input id="fotoDePerfil" class="form-control" formControlName="fotoDePerfil" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
-                    <img [src]="imgenUrl" alt="">
-                </div>
                 <div *ngIf="validacionMensajeArtistaCreado()" class = "alert alert-success">
                     Artista Creado
                 </div>
                 <div>
-                    <button class="btn btn-primary" type="submit" [disabled]="!formulario.valid" >Crear usuario</button> 
-                    <button class="btn btn-primary" type="button" [routerLink]="['/inicio']">Volver Inicio</button> 
+                    <button class="btn btn-primary" type="submit" [disabled]="!formulario.valid" >Modificar usuario</button> 
+                    <button class="btn btn-primary" type="button" (click)="llevarAPerfil()">Volver A Perfil</button> 
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+

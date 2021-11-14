@@ -112,7 +112,7 @@ export class LoginComponent implements OnInit {
           if((this.listaArtistasComprobar[i].correo.localeCompare(correoArtista.value) == 0))
           {
               flag = false;
-              this.router.navigate(['/inicio']);///agregar ruta hacia el perfil con el id
+              this.router.navigate(['/perfil',this.listaArtistasComprobar[i].id]);///agregar ruta hacia el perfil con el id
           }
       }
        

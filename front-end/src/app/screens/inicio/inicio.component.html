@@ -1,20 +1,37 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-1">
-            <p>A</p>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <img src="assets/emiway-bantai-6547083.png" alt="" class="img-fluid" id="img">
         </div>
-        <div class="col-md-5 col-sm-3">
-            <img src="assets/emiway-bantai-6547083.png" alt="" id="img">
-        </div>
-        <div class="col-md-6 col-sm-4">
-            <p>"Los artistas conceptuales son místicos más</p>
-            <p>que racionalistas. Llegan a conclusiones a las</p>
-            <p>que no llega la lógica" - Sol LeWitt</p>
+        <div class="col-md-8">
+            <div class="col-md-6 bg-warning">
+                <p>"Los artistas conceptuales son místicos más</p>
+                <p>que racionalistas. Llegan a conclusiones a las</p>
+                <p>que no llega la lógica" - Sol LeWitt</p>
+            </div>
             <div id="busquedaContenedor">
-                <input id="busqueda" class="input-rounded" type="text" formControlName="busqueda">
+                <input id="busqueda" class="input-rounded" type="text"  name="filterArtista" [(ngModel)]="filterArtista">
                 <span class="material-icons">search</span>
             </div>
-            
+            <div *ngFor="let artista of artistas | filter:filterArtista" id="content-cards"> 
+                <div class="card col-md-2">
+                    <div>{{artista.nombreArtista}}</div>
+                    <div> {{artista.nombreReal}} </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<div class="container-fluid">
+    <div class="row team">
+        <div class="col-md-4" *ngFor="let item of arregloDeTeam">
+            <app-team-pag [integranteDeTeam]="item">
+
+            </app-team-pag>
+        </div>
+    </div>
+</div>
+
+

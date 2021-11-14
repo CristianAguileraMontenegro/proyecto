@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder,FormControl, FormGroup, Validators} from '@angular/forms';//para ocupar validatos
 import {listaArtistas} from '../../interfaces/artistas';
 import {Artistas} from '../../interfaces/artistas';
+import {Obras} from '../../interfaces/obras';
 
 @Component({
   selector: 'app-registro',
@@ -14,8 +15,12 @@ export class RegistroComponent implements OnInit {
   formularioValido:boolean = false;
 
   correoDeUsuario:boolean = true;
+  nombreArtisticoV:boolean = true;
   contrasenaDeUsuario:boolean = true;
   flagUsuario:boolean = false;
+
+  imagen:any;
+  imgenUrl:any;
 
   listaArtistiasComprobar = listaArtistas;
 
@@ -27,11 +32,24 @@ export class RegistroComponent implements OnInit {
       contrasena:["",[Validators.required, Validators.minLength(5)]],//min y max para tipo numbercontrasena:["",[Validators.required, Validators.minLength(5)]], //min y max para tipo number
       nombre: ["",[Validators.required]],
       nombreArtistico:["",[Validators.required]],
-      nacionalidad:["",[Validators.required]]
+      nacionalidad:["",[Validators.required]],
+      fotoDePerfil:["",[Validators.required]]
     })
   }
 
   ngOnInit(): void {
+  }
+
+  capturarImagen(event:any){
+    this.imagen = event.target.files[0];
+    console.log(this.imagen);
+
+    let reader = new FileReader();
+    reader.readAsDataURL(this.imagen);
+    reader.onload = (event:any) =>{
+      this.imgenUrl = event.target.result;
+    }
+    
   }
 
 
@@ -43,6 +61,7 @@ export class RegistroComponent implements OnInit {
     let nombre:any = document.getElementById("nombre");
     let nombreArtistico:any = document.getElementById("nombreArtistico");
     let nacionalidad:any = document.getElementById("nacionalidad");
+    
 
 
     for(let i = 0; i < this.listaArtistiasComprobar.length; i++)
@@ -58,15 +77,29 @@ export class RegistroComponent implements OnInit {
       }
     }
 
+    for(let i = 0; i < this.listaArtistiasComprobar.length; i++)
+    {
+      if(this.listaArtistiasComprobar[i].nombreArtista.localeCompare(nombreArtistico.value) == 0){ //recorremos el arreglo de artistas en busca de uno que comprata el conrreo con el ingresado
+        this.nombreArtisticoV = false; //en caso de que exista la varibale pasa a falsa indicando que existe un nombre de usuario igual
+        this.flagUsuario = false;
+        return false;
+      }
+      else{
+        this.nombreArtisticoV = true;
+        this.flagUsuario = true;
+      }
+    }
 
-    let nuevoId:number = this.listaArtistiasComprobar.length+1;
     
 
+    let nuevoId:number = this.listaArtistiasComprobar.length+1;
+    let obrasBase = new Array<Obras>();
 
-    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value}
+    
+    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value, obrasArtista:obrasBase, fotoDePerfil:this.imagen, tipoDeDisplay:2}
 
     listaArtistas.push(artistiaAgregar);
-    console.log(listaArtistas);
+    console.log(artistiaAgregar.fotoDePerfil);
     this.correoDeUsuario = true;
 
     return true;
@@ -79,6 +112,16 @@ export class RegistroComponent implements OnInit {
       }
     
       this.correoDeUsuario = true;
+    return false;
+  }
+
+  validacionNombreArtistico():boolean{
+    if(this.nombreArtisticoV == false)
+      {
+        return true;
+      }
+    
+      this.nombreArtisticoV = true;
     return false;
   }
 
