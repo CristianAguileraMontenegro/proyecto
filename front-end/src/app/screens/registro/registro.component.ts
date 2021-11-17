@@ -96,7 +96,9 @@ export class RegistroComponent implements OnInit {
     let obrasBase = new Array<Obras>();
 
     
-    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value, obrasArtista:obrasBase, fotoDePerfil:this.imagen, tipoDeDisplay:2}
+    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value,descripcion:"", obrasArtista:obrasBase, fotoDePerfil:this.imagen, tipoDeDisplay:2, fotoDePerfilULR:this.imgenUrl}
+
+    //aqui poner el servicio que envia la imagen al folder
 
     listaArtistas.push(artistiaAgregar);
     console.log(artistiaAgregar.fotoDePerfil);

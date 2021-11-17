@@ -3,4 +3,5 @@ export interface Obras {
     nombre:string;
     descripcion:string;
     archivo:File;
+    ulr:string;
 }

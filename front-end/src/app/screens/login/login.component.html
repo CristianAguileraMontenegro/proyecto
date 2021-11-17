@@ -7,15 +7,31 @@
                 <div>
                     <label for="correo" class="form-label">Correo</label>
                     <input id="correo" class="form-control" type="text" formControlName="correo">
-                    <div *ngIf="!validarCorreoIngresado() && validarIngreso()" class="alert alert-danger"> 
+                    <div *ngIf="(!validarCorreoIngresadoArtista() && validarIngreso()) || (!validarCorreoIngresadoAdmin() && validarIngreso())" class="alert alert-danger"> 
                             Correo invalido
                     </div>
                 </div>
                 <div>
                     <label for="contrasena" class="form-label">Contraseña</label>
                     <input id="contrasena" class="form-control" type="password" formControlName="contrasena" >
-                    <div *ngIf="flagContrasenaGeneral == false" class="alert alert-danger"> 
-                        Contraseña de usuario incorrecto
+                    <div *ngIf="flagContrasenaGeneral == false || (!validarCorreoIngresadoArtista() || !validarCorreoIngresadoAdmin()) " class="alert alert-danger"> 
+                        Contraseña incorrecta
+                    </div>
+                </div>
+                <div>
+                    <label >Tipo de cuenta</label>
+                    <div class="from-check">
+                        <input type="radio" class="form-check-input cuenta" name="cuenta" id="Admin" value="Admin" formControlName="cuenta">
+                        <label for="Admin" class="form-check-label cuenta">Admin</label>
+                    </div>
+                   
+                    <div class="from-check">
+                        <input type="radio" class="form-check-input cuenta" name="cuenta" id="Artista" value="Artista" formControlName="cuenta">
+                        <label for="Artista" class="form-check-label cuenta">Artista</label>
+                    </div> 
+                            
+                    <div *ngIf="formulario.controls['cuenta'].hasError('required')"> <!--hasError determina el tipo de error-->
+                        Elija una opcion
                     </div>
                 </div>
                 <div>

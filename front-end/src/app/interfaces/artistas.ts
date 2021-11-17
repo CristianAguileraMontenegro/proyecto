@@ -7,8 +7,10 @@ export interface Artistas {
     correo:string;
     contrasena:string;
     nacionalidad:string;
+    descripcion:string;
     obrasArtista:Array<Obras>;
     fotoDePerfil:File;
+    fotoDePerfilULR:string;
     tipoDeDisplay:number;
 }
 

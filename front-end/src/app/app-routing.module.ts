@@ -5,6 +5,7 @@ import {LoginComponent} from './screens/login/login.component';
 import {RegistroComponent} from './screens/registro/registro.component';
 import {PerfilComponent} from './screens/perfil/perfil.component';
 import { EdicionPerfilComponent } from './screens/edicion-perfil/edicion-perfil.component';
+import {PerfilAdminComponent} from './screens/perfil-admin/perfil-admin.component';
 
 const routes: Routes = [
   {path:"",redirectTo:"/inicio",pathMatch:"full"},
@@ -12,9 +13,8 @@ const routes: Routes = [
   {path:"login", component:LoginComponent},
   {path:"registro", component:RegistroComponent},
   {path:"perfil/:id", component:PerfilComponent},
-  {path:"edicion/:id", component:EdicionPerfilComponent}
-
-
+  {path:"edicion/:id", component:EdicionPerfilComponent},
+  {path:"admin", component:PerfilAdminComponent},
 ];
 
 @NgModule({

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder,FormControl, FormGroup, Validators} from '@angular/forms';//para ocupar validatos
 import {listaArtistas} from '../../interfaces/artistas';
+import {adminPrueba} from '../../interfaces/admin';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit {
 
 
   listaArtistasComprobar = listaArtistas;
+  adminComprobar = adminPrueba;
 
   flagContrasenaGeneral:boolean = true;
 
@@ -23,13 +25,14 @@ export class LoginComponent implements OnInit {
     this.formulario=FormB.group({
       correo:["",[Validators.required]], //los "" son el value
       contrasena:["",[Validators.required]], //min y max para tipo number
+      cuenta:["",Validators.required]
     })
     
   }
   ngOnInit(): void {
   }
 
-  validarCorreoIngresado():boolean{
+  validarCorreoIngresadoArtista():boolean{
 
     let correoArtista:any = document.getElementById("correo");
     let flag = true;
@@ -48,10 +51,23 @@ export class LoginComponent implements OnInit {
     return flagCorreo;
   }
 
+  validarCorreoIngresadoAdmin():boolean{
+
+    let correo:any = document.getElementById("correo");
+   
+    let flagCorreo = false;
+
+    if(correo.value == this.adminComprobar.correo)
+    {
+        flagCorreo = true; //existe el conrreo de artista
+    }
+    return flagCorreo;
+  }
+
   validarIngreso():boolean{
-      let correoArtista:any = document.getElementById("correo");
+      let correo:any = document.getElementById("correo");
       
-      if(correoArtista.value == " "){
+      if(correo.value == " "){
   
         return false;
       }
@@ -60,7 +76,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  validarContrasenaIngresado():boolean{
+  validarContrasenaIngresadoArtista():boolean{
 
     let contrasenaUsuario:any = document.getElementById("contrasena");
     let correoArtista:any = document.getElementById("correo");
@@ -83,41 +99,110 @@ export class LoginComponent implements OnInit {
     return flagContrasena;
   }
 
+  validarContrasenaIngresadoAdmin():boolean{
+
+    let contrasenaUsuario:any = document.getElementById("contrasena");
+    let flag = true;
+    let flagContrasena = false;
+
+    
+    if(this.adminComprobar.contrasena == contrasenaUsuario.value)
+    {
+      flag = false;
+      flagContrasena = true; //la contrasena concuerda con el de usuario
+      this.flagContrasenaGeneral = true;
+    }
+    else{
+      this.flagContrasenaGeneral = false;
+    }
+    
+
+    return flagContrasena;
+  }
+
   validacion():boolean{
+
+    let eleccionDeTipoDeUsuario:any;
+    let radioCheck:any = document.getElementsByClassName("form-check-input cuenta");
+    for(let i = 0; i < radioCheck.length; i++){
+        if(radioCheck[i].checked)
+        {
+          eleccionDeTipoDeUsuario = radioCheck[i].value;
+        }
+    }
 
     let flagCorreo:Boolean;
     let flagContrasena:Boolean;
 
-    flagCorreo = this.validarCorreoIngresado();
-    flagContrasena = this.validarContrasenaIngresado();
+    if(eleccionDeTipoDeUsuario == "Artista"){
+      flagCorreo = this.validarCorreoIngresadoArtista();
+      flagContrasena = this.validarContrasenaIngresadoArtista();
 
-    if(flagCorreo && flagContrasena){
+      if(flagCorreo && flagContrasena){
 
-      return true;
+        return true;
+      }
+      
+      return false;
     }
+    else{
+      flagCorreo = this.validarContrasenaIngresadoAdmin()
+      flagContrasena = this.validarCorreoIngresadoAdmin()
+
+      if(flagCorreo && flagContrasena){
+
+        return true;
+      }
+      
+      return false;
+    }
+
+
+   
+
     
-    return false;
   }
 
   verificarSiPuedeIrARuta(){
-    if(this.formulario.valid && this.validarCorreoIngresado() && this.flagContrasenaGeneral && this.validacion()){
 
-      let contrasenaUsuario:any = document.getElementById("contrasena");
-      let correoArtista:any = document.getElementById("correo"); //////
-      let flag = true;
-      
-
-      for(let i = 0; i < this.listaArtistasComprobar.length && flag; i++)
-      {
-          if((this.listaArtistasComprobar[i].correo.localeCompare(correoArtista.value) == 0))
-          {
-              flag = false;
-              this.router.navigate(['/perfil',this.listaArtistasComprobar[i].id]);///agregar ruta hacia el perfil con el id
-          }
-      }
-       
-      
+    let eleccionDeTipoDeUsuario:any;
+    let radioCheck:any = document.getElementsByClassName("form-check-input cuenta");
+    for(let i = 0; i < radioCheck.length; i++){
+        if(radioCheck[i].checked)
+        {
+          eleccionDeTipoDeUsuario = radioCheck[i].value;
+        }
     }
+
+    if(eleccionDeTipoDeUsuario == "Artista"){
+      if(this.formulario.valid && this.validacion()){
+
+        let correoArtista:any = document.getElementById("correo"); //////
+        let flag = true;
+        
+
+        for(let i = 0; i < this.listaArtistasComprobar.length && flag; i++)
+        {
+            if((this.listaArtistasComprobar[i].correo.localeCompare(correoArtista.value) == 0))
+            {
+                flag = false;
+                this.router.navigate(['/perfil',this.listaArtistasComprobar[i].id]);///agregar ruta hacia el perfil con el id
+            }
+        }
+        
+        
+      }
+    }
+    else{
+      if(this.formulario.valid && this.validacion()){
+        this.router.navigate(['/admin']);///agregar ruta hacia el perfil con el id
+
+        
+      }
+    }
+
+
+    
 }
 
 }

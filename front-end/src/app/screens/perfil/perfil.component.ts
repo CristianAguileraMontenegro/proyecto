@@ -98,7 +98,7 @@ export class PerfilComponent implements OnInit {
     let nombreObra:any = document.getElementById("nombreObra");
     let descripcionObra:any = document.getElementById("descripcionObra");
 
-    let obraAgregar:Obras = {id:this.i,nombre:nombreObra.value,descripcion:descripcionObra.value,archivo:this.imagen};
+    let obraAgregar:Obras = {id:this.i,nombre:nombreObra.value,descripcion:descripcionObra.value,archivo:this.imagen, ulr:this.imgenUrl};
     
     this.artistaActual.obrasArtista.push(obraAgregar);
     

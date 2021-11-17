@@ -12,6 +12,7 @@ import {InicioComponent} from './screens/inicio/inicio.component';
 import { EdicionPerfilComponent } from './screens/edicion-perfil/edicion-perfil.component';
 import { TeamPagComponent } from './componentes/team-pag/team-pag.component';
 import { FilterPipe } from './pipes/filter.pipe';
+import { PerfilAdminComponent } from './screens/perfil-admin/perfil-admin.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { FilterPipe } from './pipes/filter.pipe';
     EdicionPerfilComponent,
     TeamPagComponent,
     FilterPipe,
+    PerfilAdminComponent,
   ],
   imports: [
     BrowserModule,
