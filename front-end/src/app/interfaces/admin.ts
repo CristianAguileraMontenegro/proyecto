@@ -4,4 +4,4 @@ export interface Admin {
     contrasena:string;
 }
 
-export let adminPrueba:Admin = {id:1, correo:"admin@ad", contrasena:"12345"};
+export let adminPrueba:Admin = {id:0, correo:"", contrasena:""};

@@ -3,6 +3,8 @@ import {FormBuilder,FormControl, FormGroup, Validators} from '@angular/forms';//
 import {listaArtistas} from '../../interfaces/artistas';
 import {Artistas} from '../../interfaces/artistas';
 import {Obras} from '../../interfaces/obras';
+import {ArtistasService} from '../../servicios/artistas.service';
+import {ImagenesService} from '../../servicios/imagenes.service';
 
 @Component({
   selector: 'app-registro',
@@ -21,19 +23,22 @@ export class RegistroComponent implements OnInit {
 
   imagen:any;
   imgenUrl:any;
+  imagenNombre:any;
 
   listaArtistiasComprobar = listaArtistas;
 
 
 
-  constructor(public FormB:FormBuilder) {
+  constructor(public FormB:FormBuilder, private servicioArtista:ArtistasService, private servicioImagenes:ImagenesService) {
     this.formulario=FormB.group({
       correo:["",[Validators.required]], //los "" son el value
       contrasena:["",[Validators.required, Validators.minLength(5)]],//min y max para tipo numbercontrasena:["",[Validators.required, Validators.minLength(5)]], //min y max para tipo number
       nombre: ["",[Validators.required]],
       nombreArtistico:["",[Validators.required]],
       nacionalidad:["",[Validators.required]],
+      descripcion:["",[Validators.required, Validators.minLength(30)]],
       fotoDePerfil:["",[Validators.required]]
+
     })
   }
 
@@ -42,6 +47,7 @@ export class RegistroComponent implements OnInit {
 
   capturarImagen(event:any){
     this.imagen = event.target.files[0];
+    this.imagenNombre = event.target.files[0].name;
     console.log(this.imagen);
 
     let reader = new FileReader();
@@ -61,6 +67,7 @@ export class RegistroComponent implements OnInit {
     let nombre:any = document.getElementById("nombre");
     let nombreArtistico:any = document.getElementById("nombreArtistico");
     let nacionalidad:any = document.getElementById("nacionalidad");
+    let descripcion:any = document.getElementById("descripcion");
     
 
 
@@ -95,11 +102,19 @@ export class RegistroComponent implements OnInit {
     let nuevoId:number = this.listaArtistiasComprobar.length+1;
     let obrasBase = new Array<Obras>();
 
-    
-    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value,descripcion:"", obrasArtista:obrasBase, fotoDePerfil:this.imagen, tipoDeDisplay:2, fotoDePerfilULR:this.imgenUrl}
+  
+    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value,descripcion:descripcion.value, obrasArtista:obrasBase, fotoDePerfil:this.imagen, tipoDeDisplay:2, fotoDePerfilULR:this.imagenNombre}
 
     //aqui poner el servicio que envia la imagen al folder
 
+    this.servicioArtista.guardarArtistas(artistiaAgregar).subscribe(Observador=>{
+
+    })
+
+    this.servicioImagenes.guardarImagenPerfil(this.imagen).subscribe((event:any)=>{
+
+    })
+    
     listaArtistas.push(artistiaAgregar);
     console.log(artistiaAgregar.fotoDePerfil);
     this.correoDeUsuario = true;

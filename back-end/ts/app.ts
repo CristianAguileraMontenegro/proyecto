@@ -1,8 +1,13 @@
 const express = require('express')
+const app = express();
 const bodyParser = require('body-parser') //se agrega para poder coupar el post
-const app = express()
+
+const formidable = require('formidable');
+const form = new formidable.IncomingForm();
+
 const cors = require('cors') //importamos cors
-const port = 3000
+const fs = require('fs');
+const path = require('path');
 const configuracion = {
     server:"127.0.0.1",
     port:3000
@@ -16,7 +21,7 @@ const connection = mysql.createConnection({
   user     : 'root',//en la tabla user
   password : '',
   port : '3306',//de xamp
-  database : 'educación'//exactamente mismo nombre que my sql
+  database : 'espacios publicos'//exactamente mismo nombre que my sql
 });
 
 connection.connect(function(err:any) {
@@ -35,71 +40,204 @@ var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(cors());
 //CRUD: create(post), read(get), update(put), delete(delete)
-app.get('/Usuarios', (req:any, res:any) => { //url, coolback solicitud y respuesta
+
+
+//back-end admin
+
+app.get('/Admin', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
-  connection.query("select * from usuarios", function(error:any, results:any, fields:any){
+  connection.query("select * from admin", function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+})
+
+//back-end admin
+
+
+
+//back-end artistas y obras
+
+
+app.get('/Artistas', (req:any, res:any) => { //url, coolback solicitud y respuesta
+  //con conexion establecida
+  connection.query("select * from artistas", function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results));
   });
   //res.send(JSON.stringify(Usuarios))
 })
 
+app.post('/GuardarArtistas',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
 
-app.get('/Usuarios/:id', (req:any, res:any) => {
-    let id = req.params.id;
-    //si son mas is se pone en el quey asi [id]
-    connection.query("select * from usuarios where id=?",id, function(error:any, results:any, fields:any){
-      res.send(JSON.stringify(results));
+  
+  let id_Artistas = req.body.id;
+  let nombreReal = req.body.nombreReal;
+  let nombreArtista = req.body.nombreArtista;
+  let correo = req.body.correo;
+  let contrasena = req.body.contrasena;
+  let nacionalidad = req.body.nacionalidad;
+  let descripcion	= req.body.descripcion;
+  let fotoDePerfilULR = req.body.fotoDePerfilULR;
+  let tipoDeDisplaytipoDeDisplay = req.body.tipoDeDisplay;
+
+  connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)",[id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay], function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+})
+
+
+app.post('/subirImagenPerfil',(req:any,res:any,next:any)=>{
+
+  const form = formidable({});
+    form.parse(req, function(err:any, fields:any, files:any) {
+
+      // `file` is the name of the <input> field of type `file`
+      console.log(files.file.originalFilename);
+      let old_path = files.file.filepath;
+      let index = old_path.lastIndexOf('/') + 1;
+      let file_name = old_path.substr(index);
+      let new_path = __dirname+"/../../front-end/src/assets/imagenesPerfil/"+files.file.originalFilename;
+
+      console.log(new_path);
+      
+      fs.readFile(old_path, function(err:any, data:any) {
+        
+        fs.writeFile(new_path, data, function(err:any) {
+          
+            fs.unlink(old_path, function(err:any) {
+              
+                if (err) {
+                    res.status(500);
+                    res.json({'success': false});
+                } else {
+                  
+                    res.status(200);
+                    res.json({'success': true,'path':new_path});
+                  
+                }
+            });
+        });
+    });
+    //res.json({ fields, files });
+  });
+});
+
+app.post('/subirObras',(req:any,res:any,next:any)=>{
+
+  const form = formidable({});
+    form.parse(req, function(err:any, fields:any, files:any) {
+
+      // `file` is the name of the <input> field of type `file`
+      //console.log(files.file.originalFilename);
+      let old_path = files.file.filepath;
+      let index = old_path.lastIndexOf('/') + 1;
+      let file_name = old_path.substr(index);
+      let new_path = __dirname+"/../../front-end/src/assets/obras/"+files.file.originalFilename;
+
+  
+      
+      fs.readFile(old_path, function(err:any, data:any) {
+        
+        fs.writeFile(new_path, data, function(err:any) {
+          
+            fs.unlink(old_path, function(err:any) {
+              
+                if (err) {
+                    res.status(500);
+                    res.json({'success': false});
+                } else {
+                  
+                    res.status(200);
+                    res.json({'success': true,'path':new_path});
+                  
+                }
+            });
+        });
+    });
+    //res.json({ fields, files });
+  });
+});
+
+
+app.get('/imagenPerfilArtista', (req:any, res:any) => { //url, coolback solicitud y respuesta
+  //con conexion establecida
+  connection.query("select * from obras", function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+  //res.send(JSON.stringify(Usuarios))
+})
+
+app.post('/GuardarObras',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+
+  let id = req.body.id;
+  let nombre = req.body.nombre;
+  let descripcion = req.body.descripcion;
+  let ulr = req.body.ulr;
+  let id_DelArtista = req.body.id_DelArtista;
+  
+  connection.query("insert into artistas (id,nombre,descripcion,ulr,id_DelArtista) values(?,?,?,?,?)",[id,nombre,descripcion,ulr,id_DelArtista], function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+})
+
+app.post('/GuardarImagenesYObrasEnFolder',(req:any,res:any,next:any)=>{
+
+  const form = formidable({});
+    form.parse(req, function(err:any, fields:any, files:any) {
+
+      // `file` is the name of the <input> field of type `file`
+      //console.log(files.file.originalFilename);
+      let old_path = files.file.filepath;
+      let index = old_path.lastIndexOf('/') + 1;
+      let file_name = old_path.substr(index);
+      let new_path = __dirname+"/../../front-end/src/assets/imagenes/"+files.file.originalFilename;
+
+  
+      
+      fs.readFile(old_path, function(err:any, data:any) {
+        
+        fs.writeFile(new_path, data, function(err:any) {
+          
+            fs.unlink(old_path, function(err:any) {
+              
+                if (err) {
+                    res.status(500);
+                    res.json({'success': false});
+                } else {
+                  
+                    res.status(200);
+                    res.json({'success': true,'path':new_path});
+                  
+                }
+            });
+        });
+    });
+    //res.json({ fields, files });
+  });
+});
+
+app.get('/ObtenerImagenesYObrasDelFolder',(req:any,res:any,next:any)=>{
+  const directoryPath = __dirname+"/../../front-end/src/assets/imagenes/";
+  fs.readdir(directoryPath, function (err:any, files:any) {
+    if (err) {
+      res.status(500).send({
+        message: "Unable to scan files!",
+      });
+    }
+    let fileInfos:any = [];
+
+    files.forEach((file:any) => {
+      fileInfos.push({
+        name: file,
+        url: "../../assets/imagenes/"+file,
+      });
     });
 
-})
+    res.status(200).send(fileInfos); 
+  });  
+});
 
 
-app.post('/CrearUsuarios',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
 
-    let usuario = req.body.usuario;
-    let clave = req.body.clave;
-    let estado = req.body.estado;
-    
-    connection.query("insert into usuarios (usuario,clave,estado) values(?,?,?)",[usuario,clave,estado], function(error:any, results:any, fields:any){
-      res.send(JSON.stringify(results.insertId));
-    });
-})
-
-app.put('/Actualizar/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
-  let id = req.params.id;
-  let usuario = req.body.usuario;
-  let clave = req.body.clave;
-  let correo = req.body.correo;
-  //preguntar como hacer de la manera en que si no hay nada no salga el mensaje de datos ceradeos
-  if(usuario != "")
-  {
-    console.log(`Usuario:${usuario} con la clave ${clave}`);
-
-    res.send("datos modificados");
-  }
-  else{
-    res.send("datos no modificados");
-  }
-  
-})
-
-app.delete('/Eliminar/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
-  let id = req.params.id;
-  let usuario = req.body.usuario;
-  let clave = req.body.clave;
-  let correo = req.body.correo;
-  //preguntar como hacer de la manera en que si no hay nada no salga el mensaje de datos ceradeos
-  if(usuario != "")
-  {
-    console.log(`Usuario:${usuario} con la clave ${clave} fue eliminado`);
-
-    res.send("datos eliminados");
-  }
-  else{
-    res.send("datos no eliminados");
-  }
-  
-})
 
 
 

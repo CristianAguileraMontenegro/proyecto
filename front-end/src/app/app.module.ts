@@ -15,6 +15,8 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { PerfilAdminComponent } from './screens/perfil-admin/perfil-admin.component';
 
 
+import {HttpClientModule} from '@angular/common/http' //para conectar con back-end
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +34,8 @@ import { PerfilAdminComponent } from './screens/perfil-admin/perfil-admin.compon
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
