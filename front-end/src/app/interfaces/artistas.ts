@@ -9,7 +9,6 @@ export interface Artistas {
     nacionalidad:string;
     descripcion:string;
     obrasArtista:Array<Obras>;
-    fotoDePerfil:File;
     fotoDePerfilULR:string;
     tipoDeDisplay:number;
 }

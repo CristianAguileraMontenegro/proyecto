@@ -1,0 +1,92 @@
+.col-md-5.col-sm-3{
+    border-color: red;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#contenedorDeTitulo{
+    position: relative;
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
+    border-width: 1px;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.col-md-7.col-sm-4{
+    border-color: rgb(0, 0, 0);
+    border-style: solid;
+    border-width: 3px;
+}
+
+#contenedorImagen{
+    position: relative;
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
+    border-width: 1px;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#imagen{
+    position: relative;
+    border-radius: 50%;
+    width: 40%;
+    height: -5%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#contenedorDeObras{
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
+    border-width: 3px;
+}
+
+#contenedorBotones{
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
+    border-width: 1px;
+    width: 80%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#contenedorBotones button{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    margin-top: 2%;
+}
+
+#contenedorBotones input{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    margin-top: 2%;
+}
+
+
+#contenedorDatosPersonales{
+    position: relative;
+    border-color: rgb(0, 0, 0);
+    border-style: solid;
+    border-width: 1px;
+    margin-top: 4%;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+img{
+    position: relative;
+    width: 60%;
+    height: 60%;
+}

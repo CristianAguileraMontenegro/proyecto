@@ -1,1 +1,308 @@
-<p>perfil-admin works!</p>
+<div class="container">
+    <h3>LISTA DE ARTISTAS REGISTRADOS</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">
+                    ID#
+                </th>
+                <th scope="col">
+                    NOMBRE REAL
+                </th>
+                <th scope="col">
+                    NOMBRE ARTISTICO
+                </th>
+                <th scope="col">
+                    NACIONALIDAD
+                </th>
+                <th scope="col">
+                  ACCIÓN
+              </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let artista of listaDeArtistas">
+                <td><span>{{artista.id}}</span></td>
+                <td><span>{{artista.nombreReal}}</span></td>
+                <td><span>{{artista.nombreArtista}}</span></td>
+                <td><span>{{artista.nacionalidad}}</span></td>
+                <td><button type="button" class="btn btn-outline-danger" (click)="eliminarArtista(artista.id)">Eliminar</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <h3>
+        LISTA DE NOTICIAS
+    </h3>
+    <div class="border">
+        <button type="button" class="btn btn-outline-success" (click)="open(form1)">Agregar</button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">
+                    ID#
+                </th>
+                <th scope="col">
+                    TITULO
+                </th>
+                <th scope="col">
+                    ACCIÓN
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let noticia of listaDeNoticias">
+                <td><span>{{noticia.id}}</span></td>
+                <td><span>{{noticia.titulo}}</span></td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger" (click)="eliminarNoticia(noticia.id)">Eliminar</button>
+                    <button type="button" class="btn btn-outline-warning" (click)="open(editform1); llenarForm(noticia)">Editar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <h3>
+        LISTA DE INTEGRANTES TEAM
+    </h3>
+    <div class="border">
+        <button type="button" class="btn btn-outline-success" (click)="open(form2)">Agregar</button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">
+                    ID#
+                </th>
+                <th scope="col">
+                    NOMBRE
+                </th>
+                <th scope="col">
+                    CARGO
+                </th>
+                <th scope="col">
+                    ACCIÓN
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let integrante of listaDeIntegrantes">
+                <td><span>{{integrante.id}}</span></td>
+                <td><span>{{integrante.nombre}}</span></td>
+                <td><span>{{integrante.cargo}}</span></td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger" (click)="eliminarIntegrante(integrante.id)">Eliminar</button>
+                    <button type="button" class="btn btn-outline-warning" (click)="open(editform2); llenarForm2(integrante)">Editar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<ng-template #form1 let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Nueva noticia</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formularioNoticia" (ngSubmit)="validacion1()" novalidate>
+        <div class="form-group">
+          <label for="titulo">Titulo</label>
+          <div class="input-group">
+            <input id="titulo" formControlName="titulo" class="form-control" >
+          </div>
+          <div *ngIf="formularioNoticia.controls['titulo'].invalid && (formularioNoticia.controls['titulo'].dirty || formularioNoticia.controls['titulo'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioNoticia.controls['titulo'].hasError('required')">
+                  Titulo de noticia requerido
+              </div>
+          </div>
+          <div *ngIf="validacionMensajeTituloNoticia()" class="alert alert-danger">
+                Titulo de noticia ya EXISTE
+          </div>
+          <label for="descripcion">Descripción</label>
+          <div class="input-group">
+            <textarea name="descNoticia" formControlName="descripcion" class="form-control" id="descripcion" cols="30" rows="10"></textarea>
+            <div *ngIf="formularioNoticia.controls['descripcion'].invalid && (formularioNoticia.controls['descripcion'].dirty || formularioNoticia.controls['descripcion'].touched)" >
+                <div *ngIf="formularioNoticia.controls['descripcion'].hasError('required')">
+                    Desctipcion de la noticia requerido
+                </div>
+                <div *ngIf="formularioNoticia.controls['descripcion'].hasError('minlength')">
+                  Se necesitan al menos 50 caracteres
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="fotoDePerfil" class="form-label">Foto De Noticia</label>
+            <input id="fotoDePerfil" class="form-control" formControlName="fotoNoticia" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imgenUrl" alt="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
+        <button class="btn btn-primary" type="submit" [disabled]="!formularioNoticia.valid" (click)="modal.close('Save click')">Crear noticia</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<ng-template #editform1 let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Nueva noticia</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formularioNoticia" (ngSubmit)="validacion1Editar()" novalidate>
+        <div class="form-group">
+          <label for="titulo">Titulo</label>
+          <div class="input-group">
+            <input id="titulo" formControlName="titulo" class="form-control" >
+          </div>
+          <div *ngIf="formularioNoticia.controls['titulo'].invalid && (formularioNoticia.controls['titulo'].dirty || formularioNoticia.controls['titulo'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioNoticia.controls['titulo'].hasError('required')">
+                  Titulo de noticia requerido
+              </div>
+          </div>
+          <div *ngIf="validacionMensajeTituloNoticia()" class="alert alert-danger">
+                Titulo de noticia ya EXISTE
+          </div>
+          <label for="descripcion">Descripción</label>
+          <div class="input-group">
+            <textarea name="descNoticia" formControlName="descripcion" class="form-control" id="descripcion" cols="30" rows="10"></textarea>
+            <div *ngIf="formularioNoticia.controls['descripcion'].invalid && (formularioNoticia.controls['descripcion'].dirty || formularioNoticia.controls['descripcion'].touched)" >
+                <div *ngIf="formularioNoticia.controls['descripcion'].hasError('required')">
+                    Desctipcion de la noticia requerido
+                </div>
+                <div *ngIf="formularioNoticia.controls['descripcion'].hasError('minlength')">
+                  Se necesitan al menos 50 caracteres
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="fotoDePerfil" class="form-label">Foto De Noticia</label>
+            <input id="fotoDePerfil" class="form-control" formControlName="fotoNoticia" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imgenUrl" alt="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
+        <button class="btn btn-primary" type="submit" [disabled]="!formularioNoticia.valid" (click)="modal.close('Save click')">Editar Noticia</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<ng-template #form2 let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Nuevo Integrante</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formularioTeam" (ngSubmit)="validacion2()" novalidate>
+        <div class="form-group">
+          <label for="nombreIntegrante">Nombre</label>
+          <div class="input-group">
+            <input id="nombreIntegrante" formControlName="nombreIntegrante" class="form-control" >
+            <div *ngIf="formularioTeam.controls['nombreIntegrante'].invalid && (formularioTeam.controls['nombreIntegrante'].dirty || formularioTeam.controls['nombreIntegrante'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeam.controls['nombreIntegrante'].hasError('required')">
+                  Nombre del integrante requerido
+              </div>
+            </div>
+          </div>
+          <label for="cargoIntegrante">Cargo</label>
+          <div class="input-group">
+            <input id="cargoIntegrante" formControlName="cargoIntegrante" class="form-control" >
+            <div *ngIf="formularioTeam.controls['cargoIntegrante'].invalid && (formularioTeam.controls['cargoIntegrante'].dirty || formularioTeam.controls['cargoIntegrante'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeam.controls['cargoIntegrante'].hasError('required')">
+                  Cargo del integrante requerido
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <textarea name="descripcionIntegrante" formControlName="descripcionIntegrante" class="form-control" id="descripcionIntegrante" cols="30" rows="10"></textarea>
+            <div *ngIf="formularioTeam.controls['descripcionIntegrante'].invalid && (formularioTeam.controls['descripcionIntegrante'].dirty || formularioTeam.controls['descripcionIntegrante'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeam.controls['descripcionIntegrante'].hasError('required')">
+                  Cargo del integrante requerido.
+              </div>
+              <div *ngIf="formularioTeam.controls['descripcionIntegrante'].hasError('minlength')">
+                  Se esperan 10 caracteres como minimo.
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="fotoDePerfil" class="form-label">Foto De Perfil</label>
+            <input id="fotoDePerfil" class="form-control" formControlName="fotoPerfil" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imgenUrl" alt="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="!formularioTeam.valid" (click)="modal.close('Save click')">Crear Integrante</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<ng-template #editform2 let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Nuevo Integrante</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formularioTeam" (ngSubmit)="validacion2Editar()" novalidate>
+        <div class="form-group">
+          <label for="nombreIntegrante">Nombre</label>
+          <div class="input-group">
+            <input id="nombreIntegrante" formControlName="nombreIntegrante" class="form-control" >
+            <div *ngIf="formularioTeam.controls['nombreIntegrante'].invalid && (formularioTeam.controls['nombreIntegrante'].dirty || formularioTeam.controls['nombreIntegrante'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeam.controls['nombreIntegrante'].hasError('required')">
+                  Nombre del integrante requerido
+              </div>
+            </div>
+          </div>
+          <label for="cargoIntegrante">Cargo</label>
+          <div class="input-group">
+            <input id="cargoIntegrante" formControlName="cargoIntegrante" class="form-control" >
+            <div *ngIf="formularioTeam.controls['cargoIntegrante'].invalid && (formularioTeam.controls['cargoIntegrante'].dirty || formularioTeam.controls['cargoIntegrante'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeam.controls['cargoIntegrante'].hasError('required')">
+                  Cargo del integrante requerido
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <textarea name="descripcionIntegrante" formControlName="descripcionIntegrante" class="form-control" id="descripcionIntegrante" cols="30" rows="10"></textarea>
+            <div *ngIf="formularioTeam.controls['descripcionIntegrante'].invalid && (formularioTeam.controls['descripcionIntegrante'].dirty || formularioTeam.controls['descripcionIntegrante'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeam.controls['descripcionIntegrante'].hasError('required')">
+                  Cargo del integrante requerido.
+              </div>
+              <div *ngIf="formularioTeam.controls['descripcionIntegrante'].hasError('minlength')">
+                  Se esperan 10 caracteres como minimo.
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="fotoDePerfil" class="form-label">Foto De Perfil</label>
+            <input id="fotoDePerfil" class="form-control" formControlName="fotoPerfil" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imgenUrl" alt="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="!formularioTeam.valid" (click)="modal.close('Save click')">Editar Integrante</button>
+        </div>
+      </form>
+    </div>
+</ng-template>

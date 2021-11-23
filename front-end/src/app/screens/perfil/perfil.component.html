@@ -8,43 +8,13 @@
             <div id="contenedorImagen">
                 <span class="material-icons" (click)="modificarImagen()">edit</span>
                 <input id="fotoDePerfil" (change)="capturarImagenPerfil($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg" style="display: none;" >
-                <img [src]="imgenUrl" alt="" id="imagen">
+                <img [src]="artistaActual.fotoDePerfilULR" alt="" id="imagen">
                 
             </div>
 
             <div id="contenedorBotones">
                 <button id="botonEditarPerfil" type="button" (click)="llevarAEdicion()">Editar tu perfil</button>
-                <button id="botonAgregarObra" type="button" (click)="mostarIngresoObra()">Agregar obras</button>
-                <form [formGroup]="formulario" (ngSubmit)="agregarImagen()" novalidate style="display: none;" id="formularioAgregarObra">
-                    <div>
-                        <label for="nombreObra" class="form-label">Nombre obra</label>
-                        <input id="nombreObra" class="form-control" type="text" formControlName="nombreObra">
-                        <div *ngIf="formulario.controls['nombreObra'].invalid && (formulario.controls['nombreObra'].dirty || formulario.controls['nombreObra'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
-                            <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
-                                <div *ngIf="formulario.controls['nombreObra'].hasError('required')"> <!--hasError determina el tipo de error-->
-                                    Nombre de la obra requerido
-                                </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="descripcionObra" class="form-label">Descripcion obra</label>
-                        <input id="descripcionObra" class="form-control" type="text" formControlName="descripcionObra">
-                        <div *ngIf="formulario.controls['descripcionObra'].invalid && (formulario.controls['descripcionObra'].dirty || formulario.controls['descripcionObra'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
-                            <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
-                                <div *ngIf="formulario.controls['descripcionObra'].hasError('required')"> <!--hasError determina el tipo de error-->
-                                    Descripcion de la obra requerida
-                                </div>
-                        </div>
-                    </div>
-                    <div>
-                        <input id="obras" class="form-control" formControlName="obras" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg" >
-                    </div>
-                    <div>
-                        <button class="btn btn-primary" type="submit" [disabled]="!formulario.valid" >Agregar imagen</button>
-                    </div>  
-                </form>
-                
+                <button id="botonAgregarObra" type="button" (click)="open(content)">Agregar obras</button>
             </div>
 
             <div id="contenedorDatosPersonales">
@@ -69,17 +39,17 @@
             <div class="container">
                 <div class="row" *ngIf="opcionDeDispocicionSeleccionada == 2">
                     <div class="col-6" *ngFor="let item of almacenadorDeImagenes">
-                        <img src="{{item}}" alt="" class="obras">
+                        <img [src]="item" alt="" class="obras">
                     </div>
                 </div>
                 <div class="row" *ngIf="opcionDeDispocicionSeleccionada == 3">
                     <div class="col-4" *ngFor="let item of almacenadorDeImagenes">
-                        <img src="{{item}}" alt="" class="obras">
+                        <img [src]="item" alt="" class="obras">
                     </div>
                 </div>
                 <div class="row" *ngIf="opcionDeDispocicionSeleccionada == 4">
                     <div class="col-3" *ngFor="let item of almacenadorDeImagenes">
-                        <img src="{{item}}" alt="" class="obras">
+                        <img [src]="item" alt="" class="obras">
                     </div>
                 </div>
             </div>
@@ -87,3 +57,52 @@
     </div>
 </div>
 
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">New Friend</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formulario" (ngSubmit)="agregarImagen()" novalidate id="formularioAgregarObra">
+            <div class="form-group">
+                <label for="nombreObra">Nombre obra</label>
+                <div class="input-group">
+                    <input id="nombreObra" class="form-control" type="text" formControlName="nombreObra">
+                    <div *ngIf="formulario.controls['nombreObra'].invalid && (formulario.controls['nombreObra'].dirty || formulario.controls['nombreObra'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                        <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                            <div *ngIf="formulario.controls['nombreObra'].hasError('required')"> <!--hasError determina el tipo de error-->
+                                Nombre de la obra requerido
+                            </div>
+                    </div>
+                    <div *ngIf="validacionNombreObra()" class="alert alert-danger" > 
+                        Nombre Obra requerido ya en uso
+                    </div>
+                </div>
+
+                <label for="descripcionObra">Descripcion obra</label>
+                <div class="input-group">
+                    <input id="descripcionObra" class="form-control" type="text" formControlName="descripcionObra">
+                    <div *ngIf="formulario.controls['descripcionObra'].invalid && (formulario.controls['descripcionObra'].dirty || formulario.controls['descripcionObra'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                        <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                            <div *ngIf="formulario.controls['descripcionObra'].hasError('required')"> <!--hasError determina el tipo de error-->
+                                Descripcion de la obra requerida
+                            </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input id="obras" class="form-control" formControlName="obras" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg" >
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" [disabled]="!formulario.valid" (click)="modal.close('Save click')">Agregar imagen</button>
+            </div>
+            
+        </form>
+    </div>
+</ng-template>
+
+
+ 

@@ -97,14 +97,19 @@ export class RegistroComponent implements OnInit {
       }
     }
 
-    
-
-    let nuevoId:number = this.listaArtistiasComprobar.length+1;
+    let index:number= this.listaArtistiasComprobar.length;
+    let nuevoId:number;
+    if(index==0){
+      nuevoId = 1;
+    }
+    else{
+      nuevoId = (this.listaArtistiasComprobar[index-1].id)+1;
+    }
     let obrasBase = new Array<Obras>();
 
   
-    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value,descripcion:descripcion.value, obrasArtista:obrasBase, fotoDePerfil:this.imagen, tipoDeDisplay:2, fotoDePerfilULR:this.imagenNombre}
-
+    let artistiaAgregar:Artistas = {id:nuevoId, nombreReal:nombre.value, nombreArtista:nombreArtistico.value, correo:correoArtista.value,contrasena:contrasenaArtista.value, nacionalidad:nacionalidad.value,descripcion:descripcion.value, obrasArtista:obrasBase, tipoDeDisplay:2, fotoDePerfilULR:this.imagenNombre}
+    //se guarda con el nombre para cuando se saque se haga con la url
     //aqui poner el servicio que envia la imagen al folder
 
     this.servicioArtista.guardarArtistas(artistiaAgregar).subscribe(Observador=>{
@@ -116,7 +121,7 @@ export class RegistroComponent implements OnInit {
     })
     
     listaArtistas.push(artistiaAgregar);
-    console.log(artistiaAgregar.fotoDePerfil);
+    console.log(artistiaAgregar);
     this.correoDeUsuario = true;
 
     return true;

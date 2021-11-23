@@ -14,8 +14,8 @@
                 <input id="busqueda" class="input-rounded" type="text"  name="filterArtista" [(ngModel)]="filterArtista">
                 <span class="material-icons">search</span>
             </div>
-            <div *ngFor="let artista of artistas | filter:filterArtista" id="content-cards"> 
-                <div class="card col-md-2">
+            <div *ngFor="let artista of artistas | filter:filterArtista" class="content-cards"> 
+                <div class="card col-md-2" (click)="irARuta(artista.id)">
                     <div>{{artista.nombreArtista}}</div>
                     <div> {{artista.nombreReal}} </div>
                 </div>

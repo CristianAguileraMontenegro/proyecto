@@ -13,9 +13,11 @@ import { EdicionPerfilComponent } from './screens/edicion-perfil/edicion-perfil.
 import { TeamPagComponent } from './componentes/team-pag/team-pag.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { PerfilAdminComponent } from './screens/perfil-admin/perfil-admin.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
-import {HttpClientModule} from '@angular/common/http' //para conectar con back-end
+import {HttpClientModule} from '@angular/common/http';
+import { PerfilPublicoViewComponent } from './screens/perfil-publico-view/perfil-publico-view.component' //para conectar con back-end
 
 @NgModule({
   declarations: [
@@ -29,13 +31,15 @@ import {HttpClientModule} from '@angular/common/http' //para conectar con back-e
     TeamPagComponent,
     FilterPipe,
     PerfilAdminComponent,
+    PerfilPublicoViewComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

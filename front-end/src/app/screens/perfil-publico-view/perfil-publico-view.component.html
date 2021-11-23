@@ -1,0 +1,42 @@
+<div class="container-fluid" id="contenedorDePerfil">
+    <div class="row">
+        <div class="col-md-5 col-sm-3">
+            <div id="contenedorDeTitulo">
+                <h1>Galeria</h1>
+            </div>
+
+            <div id="contenedorImagen">
+                <img [src]="imgenUrl" alt="" id="imagen">
+
+            </div>
+
+            <div id="contenedorDatosPersonales">
+                <p>{{artistaActual.nombreReal}}</p>
+                <p>{{artistaActual.nombreArtista}}</p>
+                <p>{{artistaActual.correo}}</p>
+                <p>{{artistaActual.nacionalidad}}</p>
+            </div>
+        </div>
+        <div class="col-md-7 col-sm-4" id="contenedorDeObras" *ngIf="hayObras == true"> <!--Esto debe ser un ngif-->
+           <!--dentro debe de tener un ngfor qu recorra el arreglo de obras-->
+
+            <div class="container">
+                <div class="row" *ngIf="artistaActual.tipoDeDisplay == 2">
+                    <div class="col-6" *ngFor="let item of almacenadorDeImagenes">
+                        <img src="{{item}}" alt="" class="obras">
+                    </div>
+                </div>
+                <div class="row" *ngIf="artistaActual.tipoDeDisplay == 3">
+                    <div class="col-4" *ngFor="let item of almacenadorDeImagenes">
+                        <img src="{{item}}" alt="" class="obras">
+                    </div>
+                </div>
+                <div class="row" *ngIf="artistaActual.tipoDeDisplay == 4">
+                    <div class="col-3" *ngFor="let item of almacenadorDeImagenes">
+                        <img src="{{item}}" alt="" class="obras">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,6 +60,20 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <textarea id="descripcion" class="form-control" formControlName="descripcion" cols="30" rows="10">
+                    </textarea>
+                    <div *ngIf="formulario.controls['descripcion'].invalid && (formulario.controls['descripcion'].dirty || formulario.controls['descripcion'].touched)" class="alert alert-danger"> <!--control se refiere a los controles de cada input-->
+                        <!--dirty indica que el ususario modifico el valor, touch indica que lo toco pero no modifico-->
+                        <div *ngIf="formulario.controls['descripcion'].hasError('required')"> <!--hasError determina el tipo de error-->
+                            Descripcion de artista requerido
+                        </div>
+                        <div *ngIf="formulario.controls['descripcion'].hasError('minlength')"> <!--hasError determina el tipo de error-->
+                            Descripcion de un minimo 30 caracteres
+                        </div>
+                    </div>
+                </div>
                 <div *ngIf="validacionMensajeArtistaCreado()" class = "alert alert-success">
                     Artista Creado
                 </div>

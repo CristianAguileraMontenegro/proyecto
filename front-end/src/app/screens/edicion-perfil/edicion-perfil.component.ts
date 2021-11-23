@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import {FormBuilder,FormControl, FormGroup, Validators} from '@angular/forms';//para ocupar validatos
 import {listaArtistas} from '../../interfaces/artistas';
 import { Router,ActivatedRoute } from '@angular/router';//nos permite recibir los datos
+import { ArtistasService } from '../../servicios/artistas.service'
 
 @Component({
   selector: 'app-edicion-perfil',
@@ -26,13 +27,14 @@ export class EdicionPerfilComponent implements OnInit {
   
 
 
-  constructor(public FormB:FormBuilder, private ruta:ActivatedRoute, private router:Router) { 
+  constructor(public FormB:FormBuilder, private ruta:ActivatedRoute, private router:Router, private servicioArtistas:ArtistasService) { 
       this.formulario=FormB.group({
       correo:["",[Validators.required]], //los "" son el value
       contrasena:["",[Validators.required, Validators.minLength(5)]],//min y max para tipo numbercontrasena:["",[Validators.required, Validators.minLength(5)]], //min y max para tipo number
       nombre: ["",[Validators.required]],
       nombreArtistico:["",[Validators.required]],
       nacionalidad:["",[Validators.required]],
+      descripcion:["",[Validators.required, Validators.minLength(30)]]
     });
     this.ruta.params.subscribe(datos=>{
       this.artistaAMoficar = datos["id"]; //el nombre [] debe ser el mismo que en ap.routing
@@ -47,6 +49,7 @@ export class EdicionPerfilComponent implements OnInit {
     this.formulario.get("nombre")?.setValue(this.artistaAMoficar.nombreReal);
     this.formulario.get("nombreArtistico")?.setValue(this.artistaAMoficar.nombreArtista);
     this.formulario.get("nacionalidad")?.setValue(this.artistaAMoficar.nacionalidad);
+    this.formulario.get("descripcion")?.setValue(this.artistaAMoficar.descripcion);
   }
 
 
@@ -58,6 +61,7 @@ export class EdicionPerfilComponent implements OnInit {
     let nombre:any = document.getElementById("nombre");
     let nombreArtistico:any = document.getElementById("nombreArtistico");
     let nacionalidad:any = document.getElementById("nacionalidad");
+    let descripcion:any = document.getElementById("descripcion");
     
 
 
@@ -80,9 +84,14 @@ export class EdicionPerfilComponent implements OnInit {
     this.artistaAMoficar.nombreReal = nombre.value;
     this.artistaAMoficar.nombreArtista = nombreArtistico.value;
     this.artistaAMoficar.nacionalidad = nacionalidad.value;
+    this.artistaAMoficar.descripcion = descripcion.value;
 
     this.correoDeUsuario = true;
 
+
+    this.servicioArtistas.mofificarDatos(this.artistaAMoficar.id,this.artistaAMoficar.correo,this.artistaAMoficar.contrasena,this.artistaAMoficar.nombreReal,this.artistaAMoficar.nombreArtista,this.artistaAMoficar.nacionalidad, this.artistaAMoficar.descripcion).subscribe(Observador=>{
+      
+    })
     
 
     return true;

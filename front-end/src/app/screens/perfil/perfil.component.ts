@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {listaArtistas} from '../../interfaces/artistas';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder,FormControl, FormGroup, Validators} from '@angular/forms'//para ocupar validatos
 import {Artistas} from '../../interfaces/artistas';
 import {Obras} from '../../interfaces/obras'
 import { Router,ActivatedRoute } from '@angular/router';//nos permite recibir los datos
+import { ImagenesService } from 'src/app/servicios/imagenes.service';
+import { ArtistasService} from '../../servicios/artistas.service';
 
 @Component({
   selector: 'app-perfil',
@@ -12,16 +15,18 @@ import { Router,ActivatedRoute } from '@angular/router';//nos permite recibir lo
 })
 export class PerfilComponent implements OnInit {
 
-  listaDeArtistas = listaArtistas;
+  
   artistaRecibido:number = 0;
   artistaActual:any;
 
+  closeResult:string = "";
 
   imgenUrl:any;
   imagen:any;
   obrasUrl:any;
   almacenadorDeImagenes:Array<any> = [];
   imagenPerfil:any;
+  obras:Array<any> = [];
 
 
   i:number = 0;
@@ -37,7 +42,7 @@ export class PerfilComponent implements OnInit {
   formulario:FormGroup;
 
 
-  constructor(private ruta:ActivatedRoute, public formB:FormBuilder, private router:Router) { 
+  constructor(private ruta:ActivatedRoute, public formB:FormBuilder, private router:Router, private servicioImagenes:ImagenesService, private modalService: NgbModal, private servicioArtistas:ArtistasService) { 
     this.ruta.params.subscribe(datos=>{
       this.artistaRecibido = datos["id"]; //el nombre [] debe ser el mismo que en ap.routing
     });
@@ -46,19 +51,40 @@ export class PerfilComponent implements OnInit {
       nombreObra:["",[Validators.required]],
       descripcionObra:["",Validators.required],
       obras:["", Validators.required],
-  })
+    });
+
+
+    console.log("hola4343434");
+    console.log(listaArtistas);
   }
 
   ngOnInit(): void {
-    this.artistaActual =  this.listaDeArtistas.find(objeto => objeto.id == this.artistaRecibido);//buscamos y guardamos al artista que comparta el id
-    for(let i = 0; i <  this.artistaActual.obrasArtista.length; i++)
+    console.log("hola");
+    this.identificarArtistaAMostrar();
+  }
+
+  identificarArtistaAMostrar(){
+    
+    this.artistaActual =  listaArtistas.find(objeto => objeto.id == this.artistaRecibido);//buscamos y guardamos al artista que comparta el id
+    localStorage.setItem('artista',this.artistaActual);
+    this.obtenerObrasDeArtista(this.artistaRecibido);
+    console.log(this.artistaActual)
+    
+    
+  
+    
+    
+      
+    
+    /*for(let i = 0; i <  this.artistaActual.obrasArtista.length; i++)
     {
       this.hayObras = true;
-
+      this.almacenadorDeImagenes.push(this.artistaActual.obrasArtista[i].url);
+      
       let reader = new FileReader();
       reader.readAsDataURL( this.artistaActual.obrasArtista[i].archivo); // es usado para leer el contenido del especificado Blob o File, luego de que se lea y se genera la bse 64 se pone readyState en done y se llama inmediatamanet a onload
       reader.onload = () =>{
-        this.almacenadorDeImagenes.push(reader.result);
+        
       }
     }
     
@@ -67,24 +93,34 @@ export class PerfilComponent implements OnInit {
     reader.readAsDataURL(this.artistaActual.fotoDePerfil); // es usado para leer el contenido del especificado Blob o File, luego de que se lea y se genera la bse 64 se pone readyState en done y se llama inmediatamanet a onload
     reader.onload = () =>{
       this.imgenUrl = reader.result;
-    }
+    }*/
   }
 
-  mostarIngresoObra(){
+  obtenerObrasDeArtista(id: number){
+    this.servicioImagenes.consultarObrasTabla(id).subscribe(Observador=>{
+      for (let i = 0; i <  Observador.length; i++) {
+        this.obras.push(Observador[i]);
+        console.log("hola");
+      }
+      this.mostrarObras();
+    })
+  }
 
-    let formulario:any = document.getElementById("formularioAgregarObra");
-    formulario.style.display = "inline";
-
-    let boton:any = document.getElementById("botonAgregarObra");
-    boton.style.display = "none";
-    
+  mostrarObras(){
+    this.artistaActual.obrasArtista = this.obras;
+    for(let i = 0; i < this.obras.length; i++){
+      this.almacenadorDeImagenes.push('../../assets/obras/'+this.obras[i].ulr);
+      this.hayObras = true;
+      console.log(this.obras[i].ulr);
+    }
+    this.i = this.almacenadorDeImagenes.length;
   }
 
   capturarImagen(event:any){
     this.imagen = event.target.files[0];
+    this.imgenUrl = this.imagen.name;
 
     let reader = new FileReader();
-    
     
     reader.onload = (event:any) =>{
       this.obrasUrl = event.target.result;
@@ -93,19 +129,25 @@ export class PerfilComponent implements OnInit {
     
   }
 
-  agregarImagen(){
+  agregarImagen():boolean{
 
     let nombreObra:any = document.getElementById("nombreObra");
     let descripcionObra:any = document.getElementById("descripcionObra");
-
-    let obraAgregar:Obras = {id:this.i,nombre:nombreObra.value,descripcion:descripcionObra.value,archivo:this.imagen, ulr:this.imgenUrl};
+    let url:string = '../../assets/obras/'+this.imgenUrl;
+    let obraAgregar:Obras = {id:this.i,nombre:nombreObra.value,descripcion:descripcionObra.value, ulr:this.imgenUrl, idArtista:this.artistaActual.id};
     
+
+    if(this.validacionNombreObra() == true){
+      return false
+    }
+
     this.artistaActual.obrasArtista.push(obraAgregar);
+    
     
     this.hayObras = true;
 
-    this.almacenadorDeImagenes.push(this.obrasUrl);
-
+    this.almacenadorDeImagenes.push(url);
+    console.log(this.almacenadorDeImagenes);
     this.i = this.i+1;
 
     let formulario:any = document.getElementById("formularioAgregarObra");
@@ -113,11 +155,21 @@ export class PerfilComponent implements OnInit {
 
     let boton:any = document.getElementById("botonAgregarObra");
     boton.style.display = "inline";
+
+    console.log(this.imagen);
+
+    this.servicioImagenes.guardarObraEnTabla(obraAgregar).subscribe(Observador=>{
+
+    })
+
+    this.servicioImagenes.guardarObra(this.imagen).subscribe((event:any)=>{
+
+    })
+
+    return true;
   }
 
   srcObras(obras:any){
-
-
     let reader = new FileReader();
     
     
@@ -134,6 +186,10 @@ export class PerfilComponent implements OnInit {
 
     this.opcionDeDispocicionSeleccionada = evento.target.value;
     this.artistaActual.tipoDeDisplay = this.opcionDeDispocicionSeleccionada;
+
+    this.servicioArtistas.modificarTipoDisplay(this.artistaActual.id, this.artistaActual.tipoDeDisplay).subscribe(Observador=>{
+      
+    })
   }
 
   llevarAEdicion(){
@@ -147,27 +203,55 @@ export class PerfilComponent implements OnInit {
 
   capturarImagenPerfil(event:any){
     this.imagenPerfil = event.target.files[0];
+    //Agregar funcion para mandar nueva foto al folder y modificar la tabala de artistas con la nues url
+
+    this.servicioImagenes.guardarImagenPerfil(this.imagenPerfil).subscribe((event:any)=>{
+
+    });
+
+    this.servicioArtistas.modificarImagenPerfil(this.artistaActual.id, this.imagenPerfil.name).subscribe(Observador=>{
+        this.artistaActual.fotoDePerfilULR = '../../assets/imagenesPerfil/'+this.imagenPerfil.name;
+    })
+
     
 
-    if(this.imagenPerfil == undefined){
-        this.ocularInputFotoPerfil();
-    }
-    else{
-      let reader = new FileReader();
-      reader.onload = (event:any) =>{
-        this.imgenUrl = event.target.result;
-        this.artistaActual.fotoDePerfil = this.imagenPerfil;
-        this.ocularInputFotoPerfil();
-        
-      }
-      reader.readAsDataURL(this.imagenPerfil);
-    }
-    
+    this.ocularInputFotoPerfil();
   }
-
+   
   ocularInputFotoPerfil(){
     
     let input:any = document.getElementById("fotoDePerfil");
     input.style.display = "none"
   }
+
+  validacionNombreObra():boolean{
+    let nombreObra:any = document.getElementById("nombreObra");
+
+    for (let index = 0; index < this.artistaActual.obrasArtista.length; index++) {
+        if(this.artistaActual.obrasArtista[index].nombre == nombreObra.value){
+          return true;
+        }
+    }
+
+    return false;
+  }
+
+  open(content:any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
 }

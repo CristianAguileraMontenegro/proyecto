@@ -63,6 +63,20 @@ app.post('/GuardarArtistas', jsonParser, function (req, res) {
         res.send(JSON.stringify(results.insertId));
     });
 });
+app.post('/GuardarArtistas', jsonParser, function (req, res) {
+    var id_Artistas = req.body.id;
+    var nombreReal = req.body.nombreReal;
+    var nombreArtista = req.body.nombreArtista;
+    var correo = req.body.correo;
+    var contrasena = req.body.contrasena;
+    var nacionalidad = req.body.nacionalidad;
+    var descripcion = req.body.descripcion;
+    var fotoDePerfilULR = req.body.fotoDePerfilULR;
+    var tipoDeDisplaytipoDeDisplay = req.body.tipoDeDisplay;
+    connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)", [id_Artistas, nombreReal, nombreArtista, correo, contrasena, nacionalidad, descripcion, fotoDePerfilULR, tipoDeDisplaytipoDeDisplay], function (error, results, fields) {
+        res.send(JSON.stringify(results.insertId));
+    });
+});
 app.post('/subirImagenPerfil', function (req, res, next) {
     var form = formidable({});
     form.parse(req, function (err, fields, files) {
@@ -91,14 +105,16 @@ app.post('/subirImagenPerfil', function (req, res, next) {
     });
 });
 app.post('/subirObras', function (req, res, next) {
-    var form = formidable({});
-    form.parse(req, function (err, fields, files) {
+    var form1 = formidable({});
+    form1.parse(req, function (err, fields, files) {
+        console.log("hola");
         // `file` is the name of the <input> field of type `file`
-        //console.log(files.file.originalFilename);
+        console.log(files.file.originalFilename);
         var old_path = files.file.filepath;
         var index = old_path.lastIndexOf('/') + 1;
         var file_name = old_path.substr(index);
         var new_path = __dirname + "/../../front-end/src/assets/obras/" + files.file.originalFilename;
+        console.log(new_path);
         fs.readFile(old_path, function (err, data) {
             fs.writeFile(new_path, data, function (err) {
                 fs.unlink(old_path, function (err) {
@@ -116,51 +132,43 @@ app.post('/subirObras', function (req, res, next) {
         //res.json({ fields, files });
     });
 });
-app.get('/imagenPerfilArtista', function (req, res) {
+app.get('/ObrasEspecificas/:id', function (req, res) {
     //con conexion establecida
-    connection.query("select * from obras", function (error, results, fields) {
+    var idArtista = req.params.id;
+    connection.query("SELECT * FROM obras WHERE id_DelArtista=?", idArtista, function (error, results, fields) {
         res.send(JSON.stringify(results));
     });
     //res.send(JSON.stringify(Usuarios))
 });
-app.post('/GuardarObras', jsonParser, function (req, res) {
+app.put('/modificarFotoPerfil/:id', jsonParser, function (req, res) {
     var id = req.body.id;
-    var nombre = req.body.nombre;
-    var descripcion = req.body.descripcion;
-    var ulr = req.body.ulr;
-    var id_DelArtista = req.body.id_DelArtista;
-    connection.query("insert into artistas (id,nombre,descripcion,ulr,id_DelArtista) values(?,?,?,?,?)", [id, nombre, descripcion, ulr, id_DelArtista], function (error, results, fields) {
+    var ulr = req.body.url;
+    connection.query("UPDATE artistas SET fotoDePerfilULR=? WHERE id_Artistas=? ", [ulr, id], function (error, results, fields) {
         res.send(JSON.stringify(results.insertId));
     });
 });
-app.post('/GuardarImagenesYObrasEnFolder', function (req, res, next) {
-    var form = formidable({});
-    form.parse(req, function (err, fields, files) {
-        // `file` is the name of the <input> field of type `file`
-        //console.log(files.file.originalFilename);
-        var old_path = files.file.filepath;
-        var index = old_path.lastIndexOf('/') + 1;
-        var file_name = old_path.substr(index);
-        var new_path = __dirname + "/../../front-end/src/assets/imagenes/" + files.file.originalFilename;
-        fs.readFile(old_path, function (err, data) {
-            fs.writeFile(new_path, data, function (err) {
-                fs.unlink(old_path, function (err) {
-                    if (err) {
-                        res.status(500);
-                        res.json({ 'success': false });
-                    }
-                    else {
-                        res.status(200);
-                        res.json({ 'success': true, 'path': new_path });
-                    }
-                });
-            });
-        });
-        //res.json({ fields, files });
+app.put('/modificarTipoDisplay/:id', jsonParser, function (req, res) {
+    var id = req.body.id;
+    var tipoDeDisplay = req.body.tipoDeDisplay;
+    connection.query("UPDATE artistas SET tipoDeDisplaytipoDeDisplay=? WHERE id_Artistas=? ", [tipoDeDisplay, id], function (error, results, fields) {
+        res.send(JSON.stringify(results.insertId));
     });
 });
-app.get('/ObtenerImagenesYObrasDelFolder', function (req, res, next) {
-    var directoryPath = __dirname + "/../../front-end/src/assets/imagenes/";
+app.put('/modificarDatosArtista/:id', jsonParser, function (req, res) {
+    var id = req.body.id;
+    var correo = req.body.correo;
+    var contrasena = req.body.contrasena;
+    var nombreReal = req.body.nombreReal;
+    var nombreArtista = req.body.nombreArtista;
+    var nacionalidad = req.body.nacionalidad;
+    var descripcion = req.body.descripcion;
+    connection.query("UPDATE artistas set nombreReal=?, nombreArtista=?, correo=?, contrasena=?, nacionalidad=?, descripcion=? WHERE id_Artistas=? ", [nombreReal, nombreArtista, correo, contrasena, nacionalidad, descripcion, id], function (error, results, fields) {
+        res.send(JSON.stringify(results.insertId));
+    });
+});
+//obtener imganes de folders
+app.get('/ObtenerImagenesDePerfilDelFolder', function (req, res, next) {
+    var directoryPath = __dirname + "/../../front-end/src/assets/imagenesPerfil/";
     fs.readdir(directoryPath, function (err, files) {
         if (err) {
             res.status(500).send({
@@ -171,7 +179,25 @@ app.get('/ObtenerImagenesYObrasDelFolder', function (req, res, next) {
         files.forEach(function (file) {
             fileInfos.push({
                 name: file,
-                url: "../../assets/imagenes/" + file,
+                url: "../../assets/imagenesPerfil/" + file,
+            });
+        });
+        res.status(200).send(fileInfos);
+    });
+});
+app.get('/ObtenerObrasDelFolder', function (req, res, next) {
+    var directoryPath = __dirname + "/../../front-end/src/assets/obras/";
+    fs.readdir(directoryPath, function (err, files) {
+        if (err) {
+            res.status(500).send({
+                message: "Unable to scan files!",
+            });
+        }
+        var fileInfos = [];
+        files.forEach(function (file) {
+            fileInfos.push({
+                name: file,
+                url: "../../assets/obras/" + file,
             });
         });
         res.status(200).send(fileInfos);
