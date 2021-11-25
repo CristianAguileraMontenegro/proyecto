@@ -66,6 +66,15 @@ app.get('/Artistas', (req:any, res:any) => { //url, coolback solicitud y respues
   //res.send(JSON.stringify(Usuarios))
 })
 
+app.get('/Artistas/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
+  //con conexion establecida
+  const id_Artista = req.params.id;
+  connection.query("SELECT * FROM artistas WHERE id_ArtistaS=?", id_Artista,function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+  //res.send(JSON.stringify(Usuarios))
+})
+
 app.post('/GuardarArtistas',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
 
   
@@ -84,20 +93,17 @@ app.post('/GuardarArtistas',jsonParser,(req:any, res:any) => {//se agrega body p
   });
 })
 
-app.post('/GuardarArtistas',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+app.post('/GuardarObrasEnTabla',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
 
+  let id = req.body.id;
+  let nombre = req.body.nombre;
+  let descripcion = req.body.descripcion;
+  let ulr = req.body.ulr;
+  let id_DelArtista = req.body.idArtista;
+
+  console.log(id,nombre,descripcion,ulr,id_DelArtista);
   
-  let id_Artistas = req.body.id;
-  let nombreReal = req.body.nombreReal;
-  let nombreArtista = req.body.nombreArtista;
-  let correo = req.body.correo;
-  let contrasena = req.body.contrasena;
-  let nacionalidad = req.body.nacionalidad;
-  let descripcion	= req.body.descripcion;
-  let fotoDePerfilULR = req.body.fotoDePerfilULR;
-  let tipoDeDisplaytipoDeDisplay = req.body.tipoDeDisplay;
-
-  connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)",[id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay], function(error:any, results:any, fields:any){
+  connection.query("insert into obras (id,nombre,descripcion,ulr,id_DelArtista) values(?,?,?,?,?)",[id,nombre,descripcion,ulr,id_DelArtista], function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results.insertId));
   });
 })
@@ -271,9 +277,237 @@ app.get('/ObtenerObrasDelFolder',(req:any,res:any,next:any)=>{
   });  
 });
 
+//obtener imganes de folders
+
+//noticias
+app.post('/GuardarNoticiasEnTabla',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+
+  let id = req.body.id;
+  let titulo = req.body.titulo;
+  let texto = req.body.texto;
+  let imagenURL = req.body.imagenURL;
+  console.log(id,titulo,texto,imagenURL)
+  
+  connection.query("insert into noticias (titulo,texto,id,imagenURL) values(?,?,?,?)",[titulo,texto,id,imagenURL], function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+});
+
+app.get('/Noticias', (req:any, res:any) => { //url, coolback solicitud y respuesta
+  //con conexion establecida
+  connection.query("select * from noticias", function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+  //res.send(JSON.stringify(Usuarios))
+});
+
+app.get('/NoticiaEspecificas/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
+  //con conexion establecida
+  const id = req.params.id;
+
+  connection.query("SELECT * FROM noticias WHERE id=?",id, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+  //res.send(JSON.stringify(Usuarios))
+});
+
+app.put('/ModificarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+
+  let id = req.body.id;
+  let titulo = req.body.titulo;
+  let texto = req.body.texto;
+  let imagenURL = req.body.imagenURL;
+  console.log(id,titulo,texto,imagenURL);
+  connection.query("UPDATE noticias set titulo=?, texto=?, imagenURL=? WHERE id=? ",[titulo,texto,imagenURL,id], function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+});
+
+app.delete('/EliminarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+  let id = req.params.id;
+  
+  connection.query("DELETE FROM noticias WHERE id=? ",id, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+  
+});
+
+app.post('/subirNoticia',(req:any,res:any,next:any)=>{
+
+  
+  const form1 = formidable({});
+  
+    form1.parse(req, function(err:any, fields:any, files:any) {
+      console.log("hola");
+      // `file` is the name of the <input> field of type `file`
+      console.log(files.file.originalFilename);
+      let old_path = files.file.filepath;
+      let index = old_path.lastIndexOf('/') + 1;
+      let file_name = old_path.substr(index);
+      let new_path = __dirname+"/../../front-end/src/assets/noticias/"+files.file.originalFilename;
+
+      console.log(new_path);
+      
+      fs.readFile(old_path, function(err:any, data:any) {
+        
+        fs.writeFile(new_path, data, function(err:any) {
+          
+            fs.unlink(old_path, function(err:any) {
+              
+                if (err) {
+                    res.status(500);
+                    res.json({'success': false});
+                } else {
+                  
+                    res.status(200);
+                    res.json({'success': true,'path':new_path});
+                  
+                }
+            });
+        });
+    });
+    //res.json({ fields, files });
+  });
+});
+
+app.get('/ObtenerNoticiasDelFolder',(req:any,res:any,next:any)=>{
+  const directoryPath = __dirname+"/../../front-end/src/assets/noticias/";
+  fs.readdir(directoryPath, function (err:any, files:any) {
+    if (err) {
+      res.status(500).send({
+        message: "Unable to scan files!",
+      });
+    }
+    let fileInfos:any = [];
+
+    files.forEach((file:any) => {
+      fileInfos.push({
+        name: file,
+        url: "../../assets/noticias/"+file,
+      });
+    });
+
+    res.status(200).send(fileInfos); 
+  });  
+});
+
+//noticias
 
 
+//integrante-Team
 
+app.post('/GuardarIntegranteEnTabla',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+
+  let id = req.body.id;
+  let nombre = req.body.nombre;
+  let cargo = req.body.cargo;
+  let descripcion = req.body.descripcion;
+  let imagen = req.body.imagen;
+  
+  
+  connection.query("insert into integrante (titulo,texto,id,imagenURL) values(?,?,?,?)",[], function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+});
+
+app.get('/Noticias', (req:any, res:any) => { //url, coolback solicitud y respuesta
+  //con conexion establecida
+  connection.query("select * from noticias", function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+  //res.send(JSON.stringify(Usuarios))
+});
+
+app.get('/NoticiaEspecificas/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
+  //con conexion establecida
+  const id = req.params.id;
+
+  connection.query("SELECT * FROM noticias WHERE id=?",id, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+  //res.send(JSON.stringify(Usuarios))
+});
+
+app.put('/ModificarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+
+  let id = req.body.id;
+  let titulo = req.body.titulo;
+  let texto = req.body.texto;
+  let imagenURL = req.body.imagenURL;
+  console.log(id,titulo,texto,imagenURL);
+  connection.query("UPDATE noticias set titulo=?, texto=?, imagenURL=? WHERE id=? ",[titulo,texto,imagenURL,id], function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+});
+
+app.delete('/EliminarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+  let id = req.params.id;
+  
+  connection.query("DELETE FROM noticias WHERE id=? ",id, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+  
+});
+
+app.post('/subirNoticia',(req:any,res:any,next:any)=>{
+
+  
+  const form1 = formidable({});
+  
+    form1.parse(req, function(err:any, fields:any, files:any) {
+      console.log("hola");
+      // `file` is the name of the <input> field of type `file`
+      console.log(files.file.originalFilename);
+      let old_path = files.file.filepath;
+      let index = old_path.lastIndexOf('/') + 1;
+      let file_name = old_path.substr(index);
+      let new_path = __dirname+"/../../front-end/src/assets/noticias/"+files.file.originalFilename;
+
+      console.log(new_path);
+      
+      fs.readFile(old_path, function(err:any, data:any) {
+        
+        fs.writeFile(new_path, data, function(err:any) {
+          
+            fs.unlink(old_path, function(err:any) {
+              
+                if (err) {
+                    res.status(500);
+                    res.json({'success': false});
+                } else {
+                  
+                    res.status(200);
+                    res.json({'success': true,'path':new_path});
+                  
+                }
+            });
+        });
+    });
+    //res.json({ fields, files });
+  });
+});
+
+app.get('/ObtenerNoticiasDelFolder',(req:any,res:any,next:any)=>{
+  const directoryPath = __dirname+"/../../front-end/src/assets/noticias/";
+  fs.readdir(directoryPath, function (err:any, files:any) {
+    if (err) {
+      res.status(500).send({
+        message: "Unable to scan files!",
+      });
+    }
+    let fileInfos:any = [];
+
+    files.forEach((file:any) => {
+      fileInfos.push({
+        name: file,
+        url: "../../assets/noticias/"+file,
+      });
+    });
+
+    res.status(200).send(fileInfos); 
+  });  
+});
+//integrante-Team
 
 
 app.listen(configuracion, () => { 

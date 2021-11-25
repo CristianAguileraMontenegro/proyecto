@@ -21,6 +21,11 @@ export class ArtistasService {
     return this.http.get(environment.servidor+"/Artistas");
   }
 
+  consultarArtistaEspecifco(id:number):Observable<any>{
+    let objeto:any = {id:id};
+    return this.http.get(environment.servidor+"/Artistas/"+id);
+  }
+
   guardarArtistas(artista:Artistas):Observable<any>{
     return this.http.post(environment.servidor+"/GuardarArtistas",artista, this.HttpUploadOptions);
   }

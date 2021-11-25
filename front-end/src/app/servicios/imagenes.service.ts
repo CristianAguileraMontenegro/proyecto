@@ -31,7 +31,6 @@ export class ImagenesService {
 
     formData.append('file', obra);
     
-    console.log("sdfdsafsdfsdf");
     return this.http.post( `${this.baseUrl}/subirObras`,formData, this.HttpUploadOptions);
     
   }
@@ -39,7 +38,7 @@ export class ImagenesService {
 
 
   guardarObraEnTabla(obra:Obras):Observable<any>{
-    console.log(obra);
+    console.log(obra.idArtista);
     return this.http.post(environment.servidor+"/GuardarObrasEnTabla",obra, this.HttpUploadOptions);
   }
 

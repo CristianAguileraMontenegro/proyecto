@@ -13,7 +13,7 @@ export class TeamPagComponent implements OnInit {
 
   constructor() {
     this.integranteDeTeam = {
-      id:0, nombre:'',cargo:'',descripcion:'',descripcionFull:'',imagen:''
+      id:0, nombre:'',cargo:'',descripcion:'',imagen:''
     };
    }
 

@@ -115,7 +115,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="formularioNoticia" (ngSubmit)="validacion1()" novalidate>
+      <form [formGroup]="formularioNoticia" id="formularioNoticia" (ngSubmit)="validacion1()" novalidate >
         <div class="form-group">
           <label for="titulo">Titulo</label>
           <div class="input-group">
@@ -129,30 +129,32 @@
           <div *ngIf="validacionMensajeTituloNoticia()" class="alert alert-danger">
                 Titulo de noticia ya EXISTE
           </div>
-          <label for="descripcion">Descripción</label>
+          <label for="descripcion">Texto</label>
           <div class="input-group">
             <textarea name="descNoticia" formControlName="descripcion" class="form-control" id="descripcion" cols="30" rows="10"></textarea>
             <div *ngIf="formularioNoticia.controls['descripcion'].invalid && (formularioNoticia.controls['descripcion'].dirty || formularioNoticia.controls['descripcion'].touched)" >
                 <div *ngIf="formularioNoticia.controls['descripcion'].hasError('required')">
-                    Desctipcion de la noticia requerido
+                    Texto de la noticia requerido
                 </div>
                 <div *ngIf="formularioNoticia.controls['descripcion'].hasError('minlength')">
                   Se necesitan al menos 50 caracteres
               </div>
             </div>
           </div>
+          <label for="fotoDePerfil">Foto De Noticia</label>
           <div class="input-group">
-            <label for="fotoDePerfil" class="form-label">Foto De Noticia</label>
-            <input id="fotoDePerfil" class="form-control" formControlName="fotoNoticia" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
-            <img [src]="imgenUrl" alt="">
+            <input id="fotoDePerfil" class="form-control" formControlName="fotoNoticia" (change)="capturarImagenNoticia($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imagenMostrar" alt="">
           </div>
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
-        <button class="btn btn-primary" type="submit" [disabled]="!formularioNoticia.valid" (click)="modal.close('Save click')">Crear noticia</button>
+          <button class="btn btn-primary" type="submit" [disabled]="!formularioNoticia.valid">Crear noticia</button>
         </div>
+        
       </form>
     </div>
+    <button class="btn btn-primary" type="button" (click)="modal.close('Save click')">Terminar</button>
 </ng-template>
 
 <ng-template #editform1 let-modal>
@@ -163,41 +165,41 @@
       </button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="formularioNoticia" (ngSubmit)="validacion1Editar()" novalidate>
+      <form [formGroup]="formularioNoticiaEditar" (ngSubmit)="validacion1Editar()" novalidate>
         <div class="form-group">
-          <label for="titulo">Titulo</label>
+          <label for="tituloEditar">Titulo</label>
           <div class="input-group">
-            <input id="titulo" formControlName="titulo" class="form-control" >
+            <input id="tituloEditar" formControlName="tituloEditar" class="form-control" >
           </div>
-          <div *ngIf="formularioNoticia.controls['titulo'].invalid && (formularioNoticia.controls['titulo'].dirty || formularioNoticia.controls['titulo'].touched)" class="alert alert-danger">
-              <div *ngIf="formularioNoticia.controls['titulo'].hasError('required')">
+          <div *ngIf="formularioNoticiaEditar.controls['tituloEditar'].invalid && (formularioNoticiaEditar.controls['tituloEditar'].dirty || formularioNoticiaEditar.controls['tituloEditar'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioNoticiaEditar.controls['tituloEditar'].hasError('required')">
                   Titulo de noticia requerido
               </div>
           </div>
           <div *ngIf="validacionMensajeTituloNoticia()" class="alert alert-danger">
                 Titulo de noticia ya EXISTE
           </div>
-          <label for="descripcion">Descripción</label>
+          <label for="descripcionEditar">Descripción</label>
           <div class="input-group">
-            <textarea name="descNoticia" formControlName="descripcion" class="form-control" id="descripcion" cols="30" rows="10"></textarea>
-            <div *ngIf="formularioNoticia.controls['descripcion'].invalid && (formularioNoticia.controls['descripcion'].dirty || formularioNoticia.controls['descripcion'].touched)" >
-                <div *ngIf="formularioNoticia.controls['descripcion'].hasError('required')">
+            <textarea name="descNoticiaEditar" formControlName="descripcionEditar" class="form-control" id="descripcionEditar" cols="30" rows="10"></textarea>
+            <div *ngIf="formularioNoticiaEditar.controls['descripcionEditar'].invalid && (formularioNoticiaEditar.controls['descripcionEditar'].dirty || formularioNoticiaEditar.controls['descripcionEditar'].touched)" >
+                <div *ngIf="formularioNoticiaEditar.controls['descripcionEditar'].hasError('required')">
                     Desctipcion de la noticia requerido
                 </div>
-                <div *ngIf="formularioNoticia.controls['descripcion'].hasError('minlength')">
+                <div *ngIf="formularioNoticiaEditar.controls['descripcionEditar'].hasError('minlength')">
                   Se necesitan al menos 50 caracteres
               </div>
             </div>
           </div>
           <div class="input-group">
-            <label for="fotoDePerfil" class="form-label">Foto De Noticia</label>
-            <input id="fotoDePerfil" class="form-control" formControlName="fotoNoticia" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
-            <img [src]="imgenUrl" alt="">
+            <label for="fotoDePerfilEditar" class="form-label">Foto De Noticia</label>
+            <input id="fotoDePerfilEditar" class="form-control" formControlName="fotoNoticiaEditar" (change)="capturarImagenNoticia($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imagenMostrar" alt=""><!--cambiar esto imagenURL-->
           </div>
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
-        <button class="btn btn-primary" type="submit" [disabled]="!formularioNoticia.valid" (click)="modal.close('Save click')">Editar Noticia</button>
+        <button class="btn btn-primary" type="submit" [disabled]="!formularioNoticiaEditar.valid" (click)="modal.close('Save click')">Editar Noticia</button>
         </div>
       </form>
     </div>
@@ -244,8 +246,8 @@
           </div>
           <div class="input-group">
             <label for="fotoDePerfil" class="form-label">Foto De Perfil</label>
-            <input id="fotoDePerfil" class="form-control" formControlName="fotoPerfil" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
-            <img [src]="imgenUrl" alt="">
+            <input id="fotoDePerfil" class="form-control" formControlName="fotoPerfil" (change)="capturarImagenIntegrante($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imagenMostrar" alt="">
           </div>
         </div>
         <div class="modal-footer">
@@ -296,8 +298,8 @@
           </div>
           <div class="input-group">
             <label for="fotoDePerfil" class="form-label">Foto De Perfil</label>
-            <input id="fotoDePerfil" class="form-control" formControlName="fotoPerfil" (change)="capturarImagen($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
-            <img [src]="imgenUrl" alt="">
+            <input id="fotoDePerfil" class="form-control" formControlName="fotoPerfil" (change)="capturarImagenIntegrante($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <img [src]="imagenMostrar" alt="">
           </div>
         </div>
         <div class="modal-footer">

@@ -28,13 +28,13 @@ export class InicioComponent implements OnInit {
     this.arregloDeTeam = [
       {"id":1,"nombre":"Samel Lalonde","cargo":"Diseñador",
       "descripcion":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      "descripcionFull":"sdhfkjsdhfkjsdhfksjdhf","imagen":"6GCOIWKVBZEOZL5TDFMY65TAYQ.jpeg"},
+      "imagen":"6GCOIWKVBZEOZL5TDFMY65TAYQ.jpeg"},
       {"id":2,"nombre":"Ford Scavo","cargo":"Diseñador",
       "descripcion":"dsfskdjfhksjdfhsd",
-      "descripcionFull":"sdhfkjsdhfkjsdhfksjdhf","imagen":"model-gdc5d0aad1_1280.jpg"},
+      "imagen":"model-gdc5d0aad1_1280.jpg"},
       {"id":3,"nombre":"Anitta Ritta","cargo":"Artista",
       "descripcion":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      "descripcionFull":"sdhfkjsdhfkjsdhfksjdhf","imagen":"naomi-scott-4k-large-for-desktop-wallpaper-preview.jpeg"},
+      "imagen":"naomi-scott-4k-large-for-desktop-wallpaper-preview.jpeg"},
     ];
 
     
@@ -42,6 +42,7 @@ export class InicioComponent implements OnInit {
 
   ngOnInit(): void {
     
+    listaArtistas.length = 0; //de esta manera evitamos que lista artistas guarde los mismos artistas cada ves que se recargue la pagina
     this.artistas = listaArtistas;
     this.imageInfos = [];
     this.filterArtista = '';
@@ -68,7 +69,7 @@ export class InicioComponent implements OnInit {
       for (let i = 0; i <  Observador.length; i++) {
        
         this.imageInfos.push(Observador[i]); 
-        console.log(this.imageInfos[i].url)
+        
       }
     })
   }
@@ -116,7 +117,7 @@ export class InicioComponent implements OnInit {
       }
 
 
-      console.log(listaArtistas);
+    
     });
   }
 
