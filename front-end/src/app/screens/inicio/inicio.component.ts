@@ -6,6 +6,8 @@ import {AdminService} from '../../servicios/admin.service';
 import {adminPrueba} from '../../interfaces/admin';
 import {ArtistasService} from '../../servicios/artistas.service';
 import {ImagenesService} from '../../servicios/imagenes.service';
+import { IntegrantesService } from '../../servicios/integrantes.service';
+import {NoticiasService} from '../../servicios/noticias.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -16,26 +18,17 @@ import { Router } from '@angular/router';
 })
 export class InicioComponent implements OnInit {
 
-  public arregloDeTeam: IntegranteTeam[];
-
   artistas:any = listaArtistas;
   imageInfos:Array<any> = [];
   filterArtista ='';
   obras:Array<any> = [];
+  imagenesIntegrantes:Array<any> = [];
+  listaDeNoticias:any = [];
+  imagenesNoticias:Array<any> = [];
+  arregloDeTeam:any = [];
 
-
-  constructor(private servicioAdmin:AdminService, private servicioArtista:ArtistasService, private servicioImagenes:ImagenesService, private router:Router) {
-    this.arregloDeTeam = [
-      {"id":1,"nombre":"Samel Lalonde","cargo":"Diseñador",
-      "descripcion":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      "imagen":"6GCOIWKVBZEOZL5TDFMY65TAYQ.jpeg"},
-      {"id":2,"nombre":"Ford Scavo","cargo":"Diseñador",
-      "descripcion":"dsfskdjfhksjdfhsd",
-      "imagen":"model-gdc5d0aad1_1280.jpg"},
-      {"id":3,"nombre":"Anitta Ritta","cargo":"Artista",
-      "descripcion":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      "imagen":"naomi-scott-4k-large-for-desktop-wallpaper-preview.jpeg"},
-    ];
+  constructor(private servicioAdmin:AdminService, private servicioArtista:ArtistasService, private servicioImagenes:ImagenesService, private router:Router, private servicioIntegrante:IntegrantesService, private servicioNoticia:NoticiasService) {
+    
 
     
   }
@@ -44,13 +37,18 @@ export class InicioComponent implements OnInit {
     
     listaArtistas.length = 0; //de esta manera evitamos que lista artistas guarde los mismos artistas cada ves que se recargue la pagina
     this.artistas = listaArtistas;
+    this.arregloDeTeam.length = 0;
+    this.listaDeNoticias.length = 0;
     this.imageInfos = [];
     this.filterArtista = '';
     this.obras = [];
     this.obtenerAdmin();
     this.obtenerImagenesPerfilFolder();
     this.obtenerArtistas();
-    
+    this.obtenerImagenesIntegrantes();
+    this.obtenerIntegrantes();
+    this.obtenerImagenesNoticias();
+    this.obtenerNoticias();
   }
 
   obtenerAdmin(){
@@ -118,6 +116,69 @@ export class InicioComponent implements OnInit {
 
 
     
+    });
+  }
+
+  obtenerImagenesIntegrantes(){
+    this.servicioIntegrante.getIntegranteEnFolder().subscribe(Observador =>{
+
+      for(let i = 0; i < Observador.length; i++)
+      {
+        this.imagenesIntegrantes.push(Observador[i]);
+      }
+
+        
+    });
+  }
+
+  obtenerIntegrantes(){
+    this.servicioIntegrante.consultarIntegrantes().subscribe(Observador =>{
+
+      
+      for (let i = 0; i < Observador.length; i++) {
+        
+        
+        for(let j = 0; j < this.imagenesIntegrantes.length; j++)
+        {
+          
+          if (this.imagenesIntegrantes[j].name == Observador[i].imagen) {
+             this.arregloDeTeam.push({id:Observador[i].id, nombre:Observador[i].nombre, cargo:Observador[i].cargo, descripcion:Observador[i].descripcion, imagen:this.imagenesIntegrantes[j].url});
+             console.log(this.arregloDeTeam);
+          }
+         
+        }
+        
+      }
+    });
+  }
+
+  obtenerImagenesNoticias(){
+    this.servicioNoticia.getNoticiasFolder().subscribe(Observador =>{
+      for(let i = 0; i < Observador.length; i++)
+      {
+        this.imagenesNoticias.push(Observador[i]);
+      }
+    });
+  }
+
+  obtenerNoticias(){
+ 
+    this.servicioNoticia.consultarNoticias().subscribe(Observador =>{
+        for (let i = 0; i < Observador.length; i++) {
+          
+          
+          for(let j = 0; j < this.imagenesNoticias.length; j++)
+          {
+            
+            
+            if (this.imagenesNoticias[j].name == Observador[i].imagenURL) {
+              this.listaDeNoticias.push({titulo:Observador[i].titulo, texto:Observador[i].texto, id:Observador[i].id, imagenURL:this.imagenesNoticias[j].url});
+              
+            }
+          
+          }
+        }
+        console.log(this.listaDeNoticias);
     });
   }
 
