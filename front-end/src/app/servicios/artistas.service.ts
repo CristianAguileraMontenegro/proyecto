@@ -61,4 +61,14 @@ export class ArtistasService {
 
     return this.http.put(environment.servidor+ruta,objeto, this.HttpUploadOptions);
   }
+
+  eliminarArtistaEspecifico(id:number):Observable<any>{
+
+    return this.http.delete(environment.servidor+"/EliminarArtista/"+id,this.HttpUploadOptions)
+  }
+
+  eliminarObrasArtistaEspecifico(id:number):Observable<any>{ //como son tablas relacionadas es necesario eliminar primero todas las obras
+
+    return this.http.delete(environment.servidor+"/EliminarObrasArtista/"+id,this.HttpUploadOptions)
+  }
 }

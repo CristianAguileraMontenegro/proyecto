@@ -229,9 +229,23 @@ app.put('/modificarDatosArtista/:id',jsonParser,(req:any, res:any) => {//se agre
   });
 })
 
+app.delete('/EliminarArtista/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+  let id = req.params.id;
+  console.log("el id es "+id);
+  connection.query("DELETE FROM artistas WHERE id_Artistas=? ",id, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+  
+});
 
-
-
+app.delete('/EliminarObrasArtista/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+  let id = req.params.id;
+  console.log("el id es "+id);
+  connection.query("DELETE FROM obras WHERE id_DelArtista=? ",id, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+  
+});
 
 //obtener imganes de folders
 
@@ -404,52 +418,54 @@ app.post('/GuardarIntegranteEnTabla',jsonParser,(req:any, res:any) => {//se agre
   let descripcion = req.body.descripcion;
   let imagen = req.body.imagen;
   
+  console.log(id,nombre,cargo,descripcion,imagen);
   
-  connection.query("insert into integrante (titulo,texto,id,imagenURL) values(?,?,?,?)",[], function(error:any, results:any, fields:any){
+  connection.query("insert into integrante (id,nombre,cargo,descripcion,imagen) values(?,?,?,?,?)",[id,nombre,cargo,descripcion,imagen], function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results.insertId));
   });
 });
 
-app.get('/Noticias', (req:any, res:any) => { //url, coolback solicitud y respuesta
+app.get('/Integrantes', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
-  connection.query("select * from noticias", function(error:any, results:any, fields:any){
+  connection.query("select * from integrante", function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results));
   });
   //res.send(JSON.stringify(Usuarios))
 });
 
-app.get('/NoticiaEspecificas/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
+app.get('/IntegranteEspecifico/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
   const id = req.params.id;
 
-  connection.query("SELECT * FROM noticias WHERE id=?",id, function(error:any, results:any, fields:any){
+  connection.query("SELECT * FROM integrante WHERE id=?",id, function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results));
   });
   //res.send(JSON.stringify(Usuarios))
 });
 
-app.put('/ModificarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+app.put('/ModificarIntegrante/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
 
   let id = req.body.id;
-  let titulo = req.body.titulo;
-  let texto = req.body.texto;
-  let imagenURL = req.body.imagenURL;
-  console.log(id,titulo,texto,imagenURL);
-  connection.query("UPDATE noticias set titulo=?, texto=?, imagenURL=? WHERE id=? ",[titulo,texto,imagenURL,id], function(error:any, results:any, fields:any){
+  let nombre = req.body.nombre;
+  let cargo = req.body.cargo;
+  let descripcion = req.body.descripcion;
+  let imagen = req.body.imagen;
+
+  connection.query("UPDATE integrante set nombre=?, cargo=?, descripcion=?, imagen=? WHERE id=? ",[nombre, cargo, descripcion, imagen, id], function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results.insertId));
   });
 });
 
-app.delete('/EliminarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+app.delete('/EliminarIntegrante/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
   let id = req.params.id;
   
-  connection.query("DELETE FROM noticias WHERE id=? ",id, function(error:any, results:any, fields:any){
+  connection.query("DELETE FROM integrante WHERE id=? ",id, function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results.insertId));
   });
   
 });
 
-app.post('/subirNoticia',(req:any,res:any,next:any)=>{
+app.post('/subirIntegrante',(req:any,res:any,next:any)=>{
 
   
   const form1 = formidable({});
@@ -461,7 +477,7 @@ app.post('/subirNoticia',(req:any,res:any,next:any)=>{
       let old_path = files.file.filepath;
       let index = old_path.lastIndexOf('/') + 1;
       let file_name = old_path.substr(index);
-      let new_path = __dirname+"/../../front-end/src/assets/noticias/"+files.file.originalFilename;
+      let new_path = __dirname+"/../../front-end/src/assets/integrantes/"+files.file.originalFilename;
 
       console.log(new_path);
       
@@ -487,8 +503,8 @@ app.post('/subirNoticia',(req:any,res:any,next:any)=>{
   });
 });
 
-app.get('/ObtenerNoticiasDelFolder',(req:any,res:any,next:any)=>{
-  const directoryPath = __dirname+"/../../front-end/src/assets/noticias/";
+app.get('/ObtenerIntegrantesDelFolder',(req:any,res:any,next:any)=>{
+  const directoryPath = __dirname+"/../../front-end/src/assets/integrantes/";
   fs.readdir(directoryPath, function (err:any, files:any) {
     if (err) {
       res.status(500).send({
@@ -500,7 +516,7 @@ app.get('/ObtenerNoticiasDelFolder',(req:any,res:any,next:any)=>{
     files.forEach((file:any) => {
       fileInfos.push({
         name: file,
-        url: "../../assets/noticias/"+file,
+        url: "../../assets/integrantes/"+file,
       });
     });
 

@@ -171,6 +171,20 @@ app.put('/modificarDatosArtista/:id', jsonParser, function (req, res) {
         res.send(JSON.stringify(results.insertId));
     });
 });
+app.delete('/EliminarArtista/:id', jsonParser, function (req, res) {
+    var id = req.params.id;
+    console.log("el id es " + id);
+    connection.query("DELETE FROM artistas WHERE id_Artistas=? ", id, function (error, results, fields) {
+        res.send(JSON.stringify(results.insertId));
+    });
+});
+app.delete('/EliminarObrasArtista/:id', jsonParser, function (req, res) {
+    var id = req.params.id;
+    console.log("el id es " + id);
+    connection.query("DELETE FROM obras WHERE id_DelArtista=? ", id, function (error, results, fields) {
+        res.send(JSON.stringify(results.insertId));
+    });
+});
 //obtener imganes de folders
 app.get('/ObtenerImagenesDePerfilDelFolder', function (req, res, next) {
     var directoryPath = __dirname + "/../../front-end/src/assets/imagenesPerfil/";
@@ -305,42 +319,43 @@ app.post('/GuardarIntegranteEnTabla', jsonParser, function (req, res) {
     var cargo = req.body.cargo;
     var descripcion = req.body.descripcion;
     var imagen = req.body.imagen;
-    connection.query("insert into integrante (titulo,texto,id,imagenURL) values(?,?,?,?)", [], function (error, results, fields) {
+    console.log(id, nombre, cargo, descripcion, imagen);
+    connection.query("insert into integrante (id,nombre,cargo,descripcion,imagen) values(?,?,?,?,?)", [id, nombre, cargo, descripcion, imagen], function (error, results, fields) {
         res.send(JSON.stringify(results.insertId));
     });
 });
-app.get('/Noticias', function (req, res) {
+app.get('/Integrantes', function (req, res) {
     //con conexion establecida
-    connection.query("select * from noticias", function (error, results, fields) {
+    connection.query("select * from integrante", function (error, results, fields) {
         res.send(JSON.stringify(results));
     });
     //res.send(JSON.stringify(Usuarios))
 });
-app.get('/NoticiaEspecificas/:id', function (req, res) {
+app.get('/IntegranteEspecifico/:id', function (req, res) {
     //con conexion establecida
     var id = req.params.id;
-    connection.query("SELECT * FROM noticias WHERE id=?", id, function (error, results, fields) {
+    connection.query("SELECT * FROM integrante WHERE id=?", id, function (error, results, fields) {
         res.send(JSON.stringify(results));
     });
     //res.send(JSON.stringify(Usuarios))
 });
-app.put('/ModificarNoticia/:id', jsonParser, function (req, res) {
+app.put('/ModificarIntegrante/:id', jsonParser, function (req, res) {
     var id = req.body.id;
-    var titulo = req.body.titulo;
-    var texto = req.body.texto;
-    var imagenURL = req.body.imagenURL;
-    console.log(id, titulo, texto, imagenURL);
-    connection.query("UPDATE noticias set titulo=?, texto=?, imagenURL=? WHERE id=? ", [titulo, texto, imagenURL, id], function (error, results, fields) {
+    var nombre = req.body.nombre;
+    var cargo = req.body.cargo;
+    var descripcion = req.body.descripcion;
+    var imagen = req.body.imagen;
+    connection.query("UPDATE integrante set nombre=?, cargo=?, descripcion=?, imagen=? WHERE id=? ", [nombre, cargo, descripcion, imagen, id], function (error, results, fields) {
         res.send(JSON.stringify(results.insertId));
     });
 });
-app.delete('/EliminarNoticia/:id', jsonParser, function (req, res) {
+app.delete('/EliminarIntegrante/:id', jsonParser, function (req, res) {
     var id = req.params.id;
-    connection.query("DELETE FROM noticias WHERE id=? ", id, function (error, results, fields) {
+    connection.query("DELETE FROM integrante WHERE id=? ", id, function (error, results, fields) {
         res.send(JSON.stringify(results.insertId));
     });
 });
-app.post('/subirNoticia', function (req, res, next) {
+app.post('/subirIntegrante', function (req, res, next) {
     var form1 = formidable({});
     form1.parse(req, function (err, fields, files) {
         console.log("hola");
@@ -349,7 +364,7 @@ app.post('/subirNoticia', function (req, res, next) {
         var old_path = files.file.filepath;
         var index = old_path.lastIndexOf('/') + 1;
         var file_name = old_path.substr(index);
-        var new_path = __dirname + "/../../front-end/src/assets/noticias/" + files.file.originalFilename;
+        var new_path = __dirname + "/../../front-end/src/assets/integrantes/" + files.file.originalFilename;
         console.log(new_path);
         fs.readFile(old_path, function (err, data) {
             fs.writeFile(new_path, data, function (err) {
@@ -368,8 +383,8 @@ app.post('/subirNoticia', function (req, res, next) {
         //res.json({ fields, files });
     });
 });
-app.get('/ObtenerNoticiasDelFolder', function (req, res, next) {
-    var directoryPath = __dirname + "/../../front-end/src/assets/noticias/";
+app.get('/ObtenerIntegrantesDelFolder', function (req, res, next) {
+    var directoryPath = __dirname + "/../../front-end/src/assets/integrantes/";
     fs.readdir(directoryPath, function (err, files) {
         if (err) {
             res.status(500).send({
@@ -380,7 +395,7 @@ app.get('/ObtenerNoticiasDelFolder', function (req, res, next) {
         files.forEach(function (file) {
             fileInfos.push({
                 name: file,
-                url: "../../assets/noticias/" + file,
+                url: "../../assets/integrantes/" + file,
             });
         });
         res.status(200).send(fileInfos);

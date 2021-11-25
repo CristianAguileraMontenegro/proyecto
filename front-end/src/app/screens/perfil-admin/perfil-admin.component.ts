@@ -5,6 +5,8 @@ import {listaNoticias, Noticias} from '../../interfaces/noticias';
 import {listaTeam, IntegranteTeam} from '../../interfaces/integrante-team';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import {NoticiasService} from '../../servicios/noticias.service';
+import {IntegrantesService} from '../../servicios/integrantes.service';
+import {ArtistasService} from '../../servicios/artistas.service';
 import { Observable } from 'rxjs';
 
 
@@ -37,7 +39,8 @@ export class PerfilAdminComponent implements OnInit {
   imagenMostrar:any;
   closeResult:string = '';
 
-  constructor(private modalService: NgbModal, public FormB:FormBuilder, public FormBEditar:FormBuilder, public FormB2:FormBuilder, public FormB2Editar:FormBuilder, private servicioNoticia:NoticiasService) {
+  constructor(private modalService: NgbModal, public FormB:FormBuilder, public FormBEditar:FormBuilder, public FormB2:FormBuilder, public FormB2Editar:FormBuilder, 
+    private servicioNoticia:NoticiasService, private servicioIntegrante:IntegrantesService, private servicioArtista:ArtistasService) {
     this.formularioNoticia=FormB.group({
       titulo:["",[Validators.required]],
       descripcion:["",[Validators.required, Validators.minLength(10)]],
@@ -65,7 +68,11 @@ export class PerfilAdminComponent implements OnInit {
   ngOnInit(): void {
     console.log("hola")
     this.listaDeNoticias.length = 0;
+    this.listaDeIntegrantes.length = 0;
+    this.listaDeArtistas.length = 0;
     this.cargarNoticias();
+    this.cargarIntegrante();
+    this.cargarArtistas();
     //agregar la carga de noticias, artistas y integrante team
   }
 
@@ -73,8 +80,26 @@ export class PerfilAdminComponent implements OnInit {
     this.servicioNoticia.consultarNoticias().subscribe(Observador =>{
 
         for (let i = 0; i < Observador.length; i++) {
-          this.listaDeNoticias.push({titulo:Observador[i].titulo, texto:Observador[i].texto, id:Observador[i].id, imagenURL:Observador[i].imagenURL})
+          this.listaDeNoticias.push({titulo:Observador[i].titulo, texto:Observador[i].texto, id:Observador[i].id, imagenURL:Observador[i].imagenURL});
         }
+    });
+  };
+
+  cargarIntegrante(){
+    this.servicioIntegrante.consultarIntegrantes().subscribe(Observador =>{
+
+      for (let i = 0; i < Observador.length; i++) {
+        this.listaDeIntegrantes.push({id:Observador[i].id, nombre:Observador[i].nombre, cargo:Observador[i].cargo, descripcion:Observador[i].descripcion, imagen:Observador[i].imagen});
+      }
+    });
+  };
+
+  cargarArtistas(){
+    this.servicioArtista.consultarArtista().subscribe(Observador =>{
+      for (let i = 0; i < Observador.length; i++) {
+        this.listaDeArtistas.push({id:Observador[i].id_Artistas, nombreReal:Observador[i].nombreReal, nombreArtista:Observador[i].nombreArtista, correo:Observador[i].correo, contrasena:Observador[i].contrasena, 
+          nacionalidad:Observador[i].nacionalidad, descripcion:Observador[i].descripcion, obrasArtista:[] ,fotoDePerfilULR:"" ,tipoDeDisplay:Observador[i].tipoDeDisplaytipoDeDisplay});
+      }
     });
   }
 
@@ -129,6 +154,7 @@ export class PerfilAdminComponent implements OnInit {
   validacion1Editar():boolean{
     let tituloNoticia:any= document.getElementById("tituloEditar");
     let descripcionNoticia:any= document.getElementById("descripcionEditar");
+    let formulario:any = document.getElementById("formularioNoticiaEditar");
 
     for(let i = 0; i<this.listaDeNoticias.length; i++){
       if(this.listaDeNoticias[i].titulo.localeCompare(tituloNoticia.value) == 0){
@@ -160,28 +186,55 @@ export class PerfilAdminComponent implements OnInit {
     }
   
     this.tituloDeNoticiaV = true;
-
+    formulario.style.display = "none";
+    formulario.reset();
+    this.imagenMostrar = "";
     return true;
   }
 
   validacion2():boolean{
+
     let nombreIntegrante:any= document.getElementById("nombreIntegrante");
     let cargoIntegrante:any= document.getElementById("cargoIntegrante");
     let descripcionIntegrante:any= document.getElementById("descripcionIntegrante");
+    let formulario:any = document.getElementById("formularioTeam");
+    
+    let total:number = this.listaDeIntegrantes.length;
+    let nuevoId:number = 0;
+    if(total == 0)
+    {
+      nuevoId = 1;
+    }
+    else{
+      nuevoId = (this.listaDeIntegrantes[total-1].id)+1;
+    }
     
 
-    let nuevoId:number = this.listaDeIntegrantes[length+1].id+1;
     
-    let integranteAgregar:IntegranteTeam = {id: nuevoId, nombre:nombreIntegrante.value, cargo:cargoIntegrante.value, descripcion:descripcionIntegrante.value, imagen:this.imagen}
-    
+    let integranteAgregar:IntegranteTeam = {id: nuevoId, nombre:nombreIntegrante.value, cargo:cargoIntegrante.value, descripcion:descripcionIntegrante.value, imagen:this.imgenUrl}
+  
     listaTeam.push(integranteAgregar);
+
+    this.servicioIntegrante.guardarIntegranteEnTabla(integranteAgregar).subscribe(Observador =>{
+
+    });
+
+    this.servicioIntegrante.guardarIntegranteEnFolder(this.imagen).subscribe(Observador =>{
+
+    })
+
+    formulario.style.display = "none";
+    formulario.reset();
+    this.imagenMostrar = "";
     return true;
   }
   
   validacion2Editar():boolean{
-    let nombreIntegrante:any= document.getElementById("nombreIntegrante");
-    let cargoIntegrante:any= document.getElementById("cargoIntegrante");
-    let descripcionIntegrante:any= document.getElementById("descripcionIntegrante");
+    
+    let nombreIntegrante:any= document.getElementById("nombreIntegranteEditar");
+    let cargoIntegrante:any= document.getElementById("cargoIntegranteEditar");
+    let descripcionIntegrante:any= document.getElementById("descripcionIntegranteEditar");
+    let formulario:any = document.getElementById("formularioTeamEditar");
     
 
     for(let i=0; i<this.listaDeIntegrantes.length; i++){
@@ -189,8 +242,22 @@ export class PerfilAdminComponent implements OnInit {
         this.listaDeIntegrantes[i].nombre = nombreIntegrante.value;
         this.listaDeIntegrantes[i].cargo = cargoIntegrante.value;
         this.listaDeIntegrantes[i].descripcion= descripcionIntegrante.value;
+        this.listaDeIntegrantes[i].imagen = this.imgenUrl;
+
+
+        this.servicioIntegrante.modificarIntegranteEspecifico(this.listaDeIntegrantes[i]).subscribe(Observador =>{
+
+        });
+
+        this.servicioIntegrante.guardarIntegranteEnFolder(this.imagen).subscribe(Observador =>{
+
+        });
+
       }
     }
+    formulario.style.display = "none";
+    formulario.reset();
+    this.imagenMostrar = "";
     return true;
   }
 
@@ -226,8 +293,15 @@ export class PerfilAdminComponent implements OnInit {
 
   eliminarArtista(id:any){
     //listaArtistas.filter(artista => artista.id != id);
-    let index = listaArtistas.findIndex(e => id == e.id);
-    listaArtistas.splice(index,1);
+    let index = this.listaDeArtistas.findIndex(e => id == e.id);
+    this.listaDeArtistas.splice(index,1);
+    this.servicioArtista.eliminarObrasArtistaEspecifico(id).subscribe(Observador =>{//primero se eliminan las obraa
+
+    });
+
+    this.servicioArtista.eliminarArtistaEspecifico(id).subscribe(Observador =>{
+
+    });
   }
 
   eliminarNoticia(id:any){
@@ -240,8 +314,11 @@ export class PerfilAdminComponent implements OnInit {
 
   eliminarIntegrante(id:any){
     
-    let index = listaTeam.findIndex(e => id == e.id);
-    listaTeam.splice(index, 1);
+    let index = this.listaDeIntegrantes.findIndex(e => id == e.id);
+    this.listaDeIntegrantes.splice(index, 1);
+    this.servicioIntegrante.eliminarIntegranteEspecifico(id).subscribe(Observador =>{
+
+    });
     
   }
 
@@ -264,10 +341,21 @@ export class PerfilAdminComponent implements OnInit {
   }
 
   llenarForm2(integranteEditar:IntegranteTeam){
-    this.formularioTeam.get("nombreIntegrante")?.setValue(integranteEditar.nombre);
-    this.formularioTeam.get("cargoIntegrante")?.setValue(integranteEditar.cargo);
-    this.formularioTeam.get("descripcionIntegrante")?.setValue(integranteEditar.descripcion);
+    this.formularioTeamEditar.get("nombreIntegranteEditar")?.setValue(integranteEditar.nombre);
+    this.formularioTeamEditar.get("cargoIntegranteEditar")?.setValue(integranteEditar.cargo);
+    this.formularioTeamEditar.get("descripcionIntegranteEditar")?.setValue(integranteEditar.descripcion);
     this.integranteEditar = integranteEditar;
+    let flag:boolean = true;
+    this.servicioIntegrante.getIntegranteEnFolder().subscribe(Observador =>{
+      
+      for (let index = 0; index < Observador.length && flag; index++) {
+        if(Observador[index].name == integranteEditar.imagen){
+          this.imagenMostrar = Observador[index].url;
+          flag = false;
+        }
+      
+    }
+    });
   }
 
   capturarImagenNoticia(event:any){

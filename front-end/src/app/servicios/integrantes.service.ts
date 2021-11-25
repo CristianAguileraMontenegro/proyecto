@@ -20,7 +20,7 @@ export class IntegrantesService {
   }
 
   consultarIntegrantes():Observable<any>{
-    return this.http.get(environment.servidor+"/Integrante");
+    return this.http.get(environment.servidor+"/Integrantes");
   }
 
   consultarIntegranteEspecifico(id:number):Observable<any>{

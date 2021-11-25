@@ -213,7 +213,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="formularioTeam" (ngSubmit)="validacion2()" novalidate>
+      <form [formGroup]="formularioTeam" (ngSubmit)="validacion2()" novalidate id="formularioTeam">
         <div class="form-group">
           <label for="nombreIntegrante">Nombre</label>
           <div class="input-group">
@@ -233,6 +233,7 @@
               </div>
             </div>
           </div>
+          <label for="descripcionIntegrante">Descripcion</label>
           <div class="input-group">
             <textarea name="descripcionIntegrante" formControlName="descripcionIntegrante" class="form-control" id="descripcionIntegrante" cols="30" rows="10"></textarea>
             <div *ngIf="formularioTeam.controls['descripcionIntegrante'].invalid && (formularioTeam.controls['descripcionIntegrante'].dirty || formularioTeam.controls['descripcionIntegrante'].touched)" class="alert alert-danger">
@@ -265,45 +266,45 @@
       </button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="formularioTeam" (ngSubmit)="validacion2Editar()" novalidate>
+      <form [formGroup]="formularioTeamEditar" (ngSubmit)="validacion2Editar()" novalidate id="formularioTeamEditar">
         <div class="form-group">
-          <label for="nombreIntegrante">Nombre</label>
+          <label for="nombreIntegranteEditar">Nombre</label>
           <div class="input-group">
-            <input id="nombreIntegrante" formControlName="nombreIntegrante" class="form-control" >
-            <div *ngIf="formularioTeam.controls['nombreIntegrante'].invalid && (formularioTeam.controls['nombreIntegrante'].dirty || formularioTeam.controls['nombreIntegrante'].touched)" class="alert alert-danger">
-              <div *ngIf="formularioTeam.controls['nombreIntegrante'].hasError('required')">
+            <input id="nombreIntegranteEditar" formControlName="nombreIntegranteEditar" class="form-control" >
+            <div *ngIf="formularioTeamEditar.controls['nombreIntegranteEditar'].invalid && (formularioTeamEditar.controls['nombreIntegranteEditar'].dirty || formularioTeamEditar.controls['nombreIntegranteEditar'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeamEditar.controls['nombreIntegranteEditar'].hasError('required')">
                   Nombre del integrante requerido
               </div>
             </div>
           </div>
-          <label for="cargoIntegrante">Cargo</label>
+          <label for="cargoIntegranteEditar">Cargo</label>
           <div class="input-group">
-            <input id="cargoIntegrante" formControlName="cargoIntegrante" class="form-control" >
-            <div *ngIf="formularioTeam.controls['cargoIntegrante'].invalid && (formularioTeam.controls['cargoIntegrante'].dirty || formularioTeam.controls['cargoIntegrante'].touched)" class="alert alert-danger">
-              <div *ngIf="formularioTeam.controls['cargoIntegrante'].hasError('required')">
+            <input id="cargoIntegranteEditar" formControlName="cargoIntegranteEditar" class="form-control" >
+            <div *ngIf="formularioTeamEditar.controls['cargoIntegranteEditar'].invalid && (formularioTeamEditar.controls['cargoIntegranteEditar'].dirty || formularioTeamEditar.controls['cargoIntegranteEditar'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeamEditar.controls['cargoIntegranteEditar'].hasError('required')">
                   Cargo del integrante requerido
               </div>
             </div>
           </div>
           <div class="input-group">
-            <textarea name="descripcionIntegrante" formControlName="descripcionIntegrante" class="form-control" id="descripcionIntegrante" cols="30" rows="10"></textarea>
-            <div *ngIf="formularioTeam.controls['descripcionIntegrante'].invalid && (formularioTeam.controls['descripcionIntegrante'].dirty || formularioTeam.controls['descripcionIntegrante'].touched)" class="alert alert-danger">
-              <div *ngIf="formularioTeam.controls['descripcionIntegrante'].hasError('required')">
+            <textarea name="descripcionIntegranteEditar" formControlName="descripcionIntegranteEditar" class="form-control" id="descripcionIntegranteEditar" cols="30" rows="10"></textarea>
+            <div *ngIf="formularioTeamEditar.controls['descripcionIntegranteEditar'].invalid && (formularioTeamEditar.controls['descripcionIntegranteEditar'].dirty || formularioTeamEditar.controls['descripcionIntegranteEditar'].touched)" class="alert alert-danger">
+              <div *ngIf="formularioTeamEditar.controls['descripcionIntegranteEditar'].hasError('required')">
                   Cargo del integrante requerido.
               </div>
-              <div *ngIf="formularioTeam.controls['descripcionIntegrante'].hasError('minlength')">
+              <div *ngIf="formularioTeamEditar.controls['descripcionIntegranteEditar'].hasError('minlength')">
                   Se esperan 10 caracteres como minimo.
               </div>
             </div>
           </div>
           <div class="input-group">
-            <label for="fotoDePerfil" class="form-label">Foto De Perfil</label>
-            <input id="fotoDePerfil" class="form-control" formControlName="fotoPerfil" (change)="capturarImagenIntegrante($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
+            <label for="fotoDePerfilEditar" class="form-label">Foto De Perfil</label>
+            <input id="fotoDePerfilEditar" class="form-control" formControlName="fotoPerfilEditar" (change)="capturarImagenIntegrante($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg">
             <img [src]="imagenMostrar" alt="">
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" type="submit" [disabled]="!formularioTeam.valid" (click)="modal.close('Save click')">Editar Integrante</button>
+          <button class="btn btn-primary" type="submit" [disabled]="!formularioTeamEditar.valid" (click)="modal.close('Save click')">Editar Integrante</button>
         </div>
       </form>
     </div>
