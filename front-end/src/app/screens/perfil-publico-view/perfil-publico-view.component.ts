@@ -93,13 +93,20 @@ export class PerfilPublicoViewComponent implements OnInit {
   }
 
   mostrarObras(){
-    this.artistaActual.obrasArtista = this.obras;
-    for(let i = 0; i < this.obras.length; i++){
-      this.almacenadorDeImagenes.push('../../assets/obras/'+this.obras[i].ulr);
-      this.hayObras = true;
-      //console.log(this.obras[i].ulr);
-    }
-    this.i = this.almacenadorDeImagenes.length;
+    this.servicioImagenes.getObrasFolder().subscribe(Observador=>{
+      this.artistaActual.obrasArtista = this.obras;
+      for (let i = 0; i <  this.obras.length; i++) {
+        for (let j = 0; j < Observador.length; j++ )
+        {
+          if(Observador[j].name == this.obras[i].ulr)
+          {
+            this.almacenadorDeImagenes.push({url:Observador[j].url,nombre:Observador[j].name});
+            this.hayObras = true;
+          }
+        }
+      }
+       this.i = this.almacenadorDeImagenes.length;
+    });
   }
 
   obtenerImagenesPerfil(){

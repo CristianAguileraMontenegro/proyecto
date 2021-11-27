@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http'; //importamos solo 
 import {environment} from '../../environments/environment'
 import { Observable } from 'rxjs';
 import { Artistas } from '../interfaces/artistas';
+import {Obras} from '../interfaces/obras';
 
 
 @Injectable({
@@ -51,7 +52,6 @@ export class ArtistasService {
     
   }
 
-
   mofificarDatos(id:number, correo:string, contrasena:string, nombreReal:string, nombreArtista:string, nacionalidad:string, descripcion:string):Observable<any>{
 
 
@@ -70,5 +70,26 @@ export class ArtistasService {
   eliminarObrasArtistaEspecifico(id:number):Observable<any>{ //como son tablas relacionadas es necesario eliminar primero todas las obras
 
     return this.http.delete(environment.servidor+"/EliminarObrasArtista/"+id,this.HttpUploadOptions)
+  }
+
+  eliminarObraEspecifica(id:number, nombre:string):Observable<any>{
+    let objeto:any = {id:id,nombre:nombre};
+    console.log(nombre);
+    return this.http.delete(environment.servidor+"/EliminarObraEspecifica/"+nombre, this.HttpUploadOptions);
+  }
+
+  modificarObraEspecifica(obra:Obras):Observable<any>{
+
+    return this.http.put(environment.servidor+"/modificarDatosObra/"+obra.id,obra, this.HttpUploadOptions);
+  }
+
+  obtenerNombreObras():Observable<any>{
+    return this.http.get(environment.servidor+"/ObtenerNombreObras");
+  }
+
+  obtenerNombreObrasArtista(id:number):Observable<any>{
+
+    return this.http.get(environment.servidor+"/ObtenerNombreObrasArtista/"+id, this.HttpUploadOptions)
+    
   }
 }

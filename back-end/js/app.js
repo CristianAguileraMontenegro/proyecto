@@ -67,6 +67,7 @@ app.post('/GuardarArtistas', jsonParser, function (req, res) {
     var descripcion = req.body.descripcion;
     var fotoDePerfilULR = req.body.fotoDePerfilULR;
     var tipoDeDisplaytipoDeDisplay = req.body.tipoDeDisplay;
+    console.log(id_Artistas, nombreReal, nombreArtista, correo, contrasena, nacionalidad, descripcion, fotoDePerfilULR, tipoDeDisplaytipoDeDisplay);
     connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)", [id_Artistas, nombreReal, nombreArtista, correo, contrasena, nacionalidad, descripcion, fotoDePerfilULR, tipoDeDisplaytipoDeDisplay], function (error, results, fields) {
         res.send(JSON.stringify(results.insertId));
     });
@@ -171,6 +172,17 @@ app.put('/modificarDatosArtista/:id', jsonParser, function (req, res) {
         res.send(JSON.stringify(results.insertId));
     });
 });
+app.put('/modificarDatosObra/:id', jsonParser, function (req, res) {
+    var id = req.body.id;
+    var nombre = req.body.nombre;
+    var descripcion = req.body.descripcion;
+    var ulr = req.body.ulr;
+    var id_DelArtista = req.body.id_DelArtista;
+    console.log(nombre, descripcion, ulr, id_DelArtista, id);
+    connection.query("UPDATE obras set nombre=?, descripcion=?, ulr=? WHERE id_DelArtista=? AND id =?", [nombre, descripcion, ulr, id_DelArtista, id], function (error, results, fields) {
+        res.send(JSON.stringify(results.insertId));
+    });
+});
 app.delete('/EliminarArtista/:id', jsonParser, function (req, res) {
     var id = req.params.id;
     console.log("el id es " + id);
@@ -183,6 +195,24 @@ app.delete('/EliminarObrasArtista/:id', jsonParser, function (req, res) {
     console.log("el id es " + id);
     connection.query("DELETE FROM obras WHERE id_DelArtista=? ", id, function (error, results, fields) {
         res.send(JSON.stringify(results.insertId));
+    });
+});
+app.delete('/EliminarObraEspecifica/:nombre', jsonParser, function (req, res) {
+    var nombre = req.params.nombre;
+    console.log(nombre);
+    connection.query("DELETE FROM obras WHERE nombre=?", nombre, function (error, results, fields) {
+        res.send(JSON.stringify(results.insertId));
+    });
+});
+app.get('/ObtenerNombreObras', function (req, res) {
+    connection.query("select nombre from obras", function (error, results, fields) {
+        res.send(JSON.stringify(results));
+    });
+});
+app.get('/ObtenerNombreObrasArtista/:id', function (req, res) {
+    var id = req.params.id;
+    connection.query("SELECT nombre FROM obras WHERE id_DelArtista=?", id, function (error, results, fields) {
+        res.send(JSON.stringify(results)); //results solo al ser un get
     });
 });
 //obtener imganes de folders

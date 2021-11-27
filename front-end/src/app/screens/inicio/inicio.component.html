@@ -24,6 +24,27 @@
     </div>
 </div>
 
+<div>
+
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3" *ngFor="let item of listaDeNoticias">
+            <div class="contendoreNoticias">
+                <img src="{{item.imagenURL}}" alt="Galeria noticias" class="imagenesNoticias">
+                <div class="overlay">
+                    <h1>Hover</h1>
+                    <span class="material-icons white md-40">search</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+
 <div class="container-fluid">
     <div class="row team">
         <div class="col-md-4" *ngFor="let item of arregloDeTeam">

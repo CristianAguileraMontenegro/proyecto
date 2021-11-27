@@ -88,6 +88,8 @@ app.post('/GuardarArtistas',jsonParser,(req:any, res:any) => {//se agrega body p
   let fotoDePerfilULR = req.body.fotoDePerfilULR;
   let tipoDeDisplaytipoDeDisplay = req.body.tipoDeDisplay;
 
+  console.log(id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay);
+
   connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)",[id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay], function(error:any, results:any, fields:any){
     res.send(JSON.stringify(results.insertId));
   });
@@ -229,6 +231,19 @@ app.put('/modificarDatosArtista/:id',jsonParser,(req:any, res:any) => {//se agre
   });
 })
 
+app.put('/modificarDatosObra/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+
+  let id = req.body.id;
+  let nombre = req.body.nombre
+  let descripcion = req.body.descripcion; 
+  let ulr = req.body.ulr;
+  let id_DelArtista = req.body.id_DelArtista;
+  console.log(nombre,descripcion,ulr,id_DelArtista,id);
+  connection.query("UPDATE obras set nombre=?, descripcion=?, ulr=? WHERE id_DelArtista=? AND id =?",[nombre,descripcion,ulr,id_DelArtista,id], function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+})
+
 app.delete('/EliminarArtista/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
   let id = req.params.id;
   console.log("el id es "+id);
@@ -245,6 +260,34 @@ app.delete('/EliminarObrasArtista/:id',jsonParser,(req:any, res:any) => {//se ag
     res.send(JSON.stringify(results.insertId));
   });
   
+});
+
+app.delete('/EliminarObraEspecifica/:nombre',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+  
+  let nombre = req.params.nombre;
+  console.log(nombre);
+  connection.query("DELETE FROM obras WHERE nombre=?",nombre, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results.insertId));
+  });
+  
+});
+
+app.get('/ObtenerNombreObras',(req:any, res:any) =>{
+
+
+  connection.query("select nombre from obras", function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));
+  });
+
+});
+
+app.get('/ObtenerNombreObrasArtista/:id',(req:any, res:any) =>{
+
+  let id = req.params.id;
+
+  connection.query("SELECT nombre FROM obras WHERE id_DelArtista=?",id, function(error:any, results:any, fields:any){
+    res.send(JSON.stringify(results));//results solo al ser un get
+  });
 });
 
 //obtener imganes de folders

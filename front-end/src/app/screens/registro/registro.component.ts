@@ -26,6 +26,7 @@ export class RegistroComponent implements OnInit {
   imagenNombre:any;
 
   listaArtistiasComprobar = listaArtistas;
+  cantidadArtistas:number = 0;
 
 
 
@@ -43,6 +44,18 @@ export class RegistroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cargarArtistas();
+  }
+
+  cargarArtistas(){
+    this.servicioArtista.consultarArtista().subscribe(Observador =>{
+
+      for(let i = 0; i < Observador.length; i++)
+      {
+        this.listaArtistiasComprobar.push({id:Observador[i].id_Artistas, nombreReal:Observador[i].nombreReal, nombreArtista:Observador[i].nombreArtista, correo:Observador[i].correo, contrasena:Observador[i].contrasena, 
+          nacionalidad:Observador[i].nacionalidad, descripcion:Observador[i].descripcion, obrasArtista:[] ,fotoDePerfilULR:"" ,tipoDeDisplay:Observador[i].tipoDeDisplaytipoDeDisplay})
+      }
+    });
   }
 
   capturarImagen(event:any){
