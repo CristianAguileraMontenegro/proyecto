@@ -46,8 +46,22 @@ app.use(cors());
 
 app.get('/Admin', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
+  let admin:any;
   connection.query("select * from admin", function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+
+    if (error) {
+      res.status(404).send("No se encontro el perfil de administrador verifique su creación")
+    }
+    else{
+      
+      for (let row of results) {
+        admin={id_Admin:row.id_Admin, correo:row.correo, contraseña:row.contraseña};
+      }
+
+        res.status(200).send({"status":"Admin encontrado y cargado", "items":admin});
+       
+      console.log("Admistrador encontrado");
+    }
   });
 })
 
@@ -60,8 +74,21 @@ app.get('/Admin', (req:any, res:any) => { //url, coolback solicitud y respuesta
 
 app.get('/Artistas', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
+  let artistas:Array<any> =[];
   connection.query("select * from artistas", function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+
+     if (error) {
+      res.status(404).send("No se encontraron artistas verifique que se encuentre conectado a la base de datos");
+    }
+    else{
+      for (let row of results) {
+        artistas.push(row);
+      }
+     
+
+      res.status(200).send({"status":"artista ok", "items":artistas});
+      console.log("Artistas obtenidos");
+    }
   });
   //res.send(JSON.stringify(Usuarios))
 })
@@ -69,8 +96,30 @@ app.get('/Artistas', (req:any, res:any) => { //url, coolback solicitud y respues
 app.get('/Artistas/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
   const id_Artista = req.params.id;
+  let artistas:Array<any> =[];
   connection.query("SELECT * FROM artistas WHERE id_ArtistaS=?", id_Artista,function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+
+    if (error) {
+      res.status(404).send("No se encontraron el artista verifique que se encuentre conectado a la base de datos o este creado");
+      console.log(error);
+    }
+    else{
+      for (let row of results) {
+        artistas.push(row);
+      }
+      
+
+      if (artistas.length != 0) {
+        res.status(200).send({"status":"artista encontrado", "items":artistas});
+        console.log("Artista"+id_Artista+"obtenidos");
+        
+      }
+      else{
+        res.status(404).send("No se encontraron el artista verifique que se encuentre conectado a la base de datos o este creado");
+      }
+
+      
+    }
   });
   //res.send(JSON.stringify(Usuarios))
 })
@@ -91,7 +140,13 @@ app.post('/GuardarArtistas',jsonParser,(req:any, res:any) => {//se agrega body p
   console.log(id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay);
 
   connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)",[id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      res.send(error);
+    }
+    else{
+      res.status(201).send({"status":"Artista Creado y guardado", "items":JSON.stringify(results.insertId)});
+    }
+    
   });
 })
 
@@ -106,7 +161,13 @@ app.post('/GuardarObrasEnTabla',jsonParser,(req:any, res:any) => {//se agrega bo
   console.log(id,nombre,descripcion,ulr,id_DelArtista);
   
   connection.query("insert into obras (id,nombre,descripcion,ulr,id_DelArtista) values(?,?,?,?,?)",[id,nombre,descripcion,ulr,id_DelArtista], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      res.send(error);
+    }
+    else{
+      res.status(201).send({"status":"Obra creada y guardada", "items":JSON.stringify(results.insertId)});
+    }
+   
   });
 })
 
@@ -188,9 +249,27 @@ app.post('/subirObras',(req:any,res:any,next:any)=>{
 app.get('/ObrasEspecificas/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
   const idArtista = req.params.id;
-
+  let Obras:Array<any> = [];
   connection.query("SELECT * FROM obras WHERE id_DelArtista=?",idArtista, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+      
+    }
+    else{
+
+      for (let row of results) {
+        Obras.push(row);
+      }
+      
+
+      
+        res.status(200).send({"status":"Obras encontradas", "items":Obras});
+        console.log("Obras del artista"+idArtista+"obtenidas");
+        
+     
+    }
+    
   });
   //res.send(JSON.stringify(Usuarios))
 })
@@ -202,7 +281,14 @@ app.put('/modificarFotoPerfil/:id',jsonParser,(req:any, res:any) => {//se agrega
   let ulr = req.body.url;
   
   connection.query("UPDATE artistas SET fotoDePerfilULR=? WHERE id_Artistas=? ",[ulr,id], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Foto de perfil modificada", "items":JSON.stringify(results.insertId)});
+    }
+    
   });
 })
 
@@ -212,7 +298,13 @@ app.put('/modificarTipoDisplay/:id',jsonParser,(req:any, res:any) => {//se agreg
   let tipoDeDisplay = req.body.tipoDeDisplay;
 
   connection.query("UPDATE artistas SET tipoDeDisplaytipoDeDisplay=? WHERE id_Artistas=? ",[tipoDeDisplay,id], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Tipo de perfil modificado", "items":JSON.stringify(results.insertId)});
+    }
   });
 })
 
@@ -227,7 +319,13 @@ app.put('/modificarDatosArtista/:id',jsonParser,(req:any, res:any) => {//se agre
   let descripcion = req.body.descripcion; 
 
   connection.query("UPDATE artistas set nombreReal=?, nombreArtista=?, correo=?, contrasena=?, nacionalidad=?, descripcion=? WHERE id_Artistas=? ",[nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,id], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Artista modificado", "items":JSON.stringify(results.insertId)});
+    }
   });
 })
 
@@ -238,26 +336,44 @@ app.put('/modificarDatosObra/:id',jsonParser,(req:any, res:any) => {//se agrega 
   let descripcion = req.body.descripcion; 
   let ulr = req.body.ulr;
   let id_DelArtista = req.body.id_DelArtista;
-  console.log(nombre,descripcion,ulr,id_DelArtista,id);
+  
   connection.query("UPDATE obras set nombre=?, descripcion=?, ulr=? WHERE id_DelArtista=? AND id =?",[nombre,descripcion,ulr,id_DelArtista,id], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Obra modificado", "items":JSON.stringify(results.insertId)});
+    }
   });
 })
 
 app.delete('/EliminarArtista/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
   let id = req.params.id;
-  console.log("el id es "+id);
+  
   connection.query("DELETE FROM artistas WHERE id_Artistas=? ",id, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Artista Eliminado", "items":JSON.stringify(results.insertId)});
+    }
   });
   
 });
 
-app.delete('/EliminarObrasArtista/:id',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
+app.delete('/EliminarObrasArtista/:id',jsonParser,(req:any, res:any) => {//elimina todas las obras de un artista
   let id = req.params.id;
-  console.log("el id es "+id);
+  
   connection.query("DELETE FROM obras WHERE id_DelArtista=? ",id, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Obras Eliminada", "items":JSON.stringify(results.insertId)});
+    }
   });
   
 });
@@ -267,16 +383,43 @@ app.delete('/EliminarObraEspecifica/:nombre',jsonParser,(req:any, res:any) => {/
   let nombre = req.params.nombre;
   console.log(nombre);
   connection.query("DELETE FROM obras WHERE nombre=?",nombre, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Obra Eliminada", "items":JSON.stringify(results.insertId)});
+    }
   });
   
 });
 
 app.get('/ObtenerNombreObras',(req:any, res:any) =>{
 
-
+  let obras:Array<any> = [];
   connection.query("select nombre from obras", function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else
+    {
+      for (let row of results) {
+      obras.push(row);
+      }
+      
+
+      if (obras.length != 0) {
+        res.status(200).send({"status":"obras encontradas", "items":obras});
+        
+      }
+      else{
+        res.status(404).send("No se encontraron los nombres de las obras verifiquen si estan creadas");
+      }
+    }
+    
+
   });
 
 });
@@ -284,9 +427,27 @@ app.get('/ObtenerNombreObras',(req:any, res:any) =>{
 app.get('/ObtenerNombreObrasArtista/:id',(req:any, res:any) =>{
 
   let id = req.params.id;
-
+  let obras:Array<any> = [];
   connection.query("SELECT nombre FROM obras WHERE id_DelArtista=?",id, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));//results solo al ser un get
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else
+    {
+      for (let row of results) {
+      obras.push(row);
+      }
+      
+
+      if (obras.length != 0) {
+        res.status(200).send({"status":"obras encontradas", "items":obras});
+        
+      }
+      else{
+        res.status(404).send("No se encontraron los nombres de las obras verifiquen si estan creadas");
+      }
+    }
   });
 });
 
@@ -346,14 +507,44 @@ app.post('/GuardarNoticiasEnTabla',jsonParser,(req:any, res:any) => {//se agrega
   console.log(id,titulo,texto,imagenURL)
   
   connection.query("insert into noticias (titulo,texto,id,imagenURL) values(?,?,?,?)",[titulo,texto,id,imagenURL], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+
+    if (error) {
+      res.send(error);
+    }
+    else{
+      res.status(201).send({"status":"Noticia creada y guardada", "items":JSON.stringify(results.insertId)});
+    }
+    
   });
 });
 
 app.get('/Noticias', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
+  let noticias:Array<any> = [];
   connection.query("select * from noticias", function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else
+    {
+      for (let row of results) {
+        console.log("hola");
+        noticias.push(row);
+        console.log(row);
+      }
+      console.log(results);
+
+      if (noticias.length != 0) {
+        res.status(200).send({"status":"Noticias Encontradas encontradas", "items":noticias});
+        
+      }
+      else{
+        res.status(404).send("No se encontraron las noticias verifiquen si estan creadas");
+      }
+    }
+    
   });
   //res.send(JSON.stringify(Usuarios))
 });
@@ -361,9 +552,30 @@ app.get('/Noticias', (req:any, res:any) => { //url, coolback solicitud y respues
 app.get('/NoticiaEspecificas/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
   const id = req.params.id;
-
+  let noticias:Array<any> = [];
   connection.query("SELECT * FROM noticias WHERE id=?",id, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else
+    {
+      for (let row of results) {
+        console.log("hola");
+        noticias.push(row);
+        console.log(row);
+      }
+      console.log(results);
+
+      if (noticias.length != 0) {
+        res.status(200).send({"status":"Noticia encontrada", "items":noticias});
+        
+      }
+      else{
+        res.status(404).send("No se encontraron las noticias verifiquen si estan creadas");
+      }
+    }
   });
   //res.send(JSON.stringify(Usuarios))
 });
@@ -376,7 +588,14 @@ app.put('/ModificarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega bo
   let imagenURL = req.body.imagenURL;
   console.log(id,titulo,texto,imagenURL);
   connection.query("UPDATE noticias set titulo=?, texto=?, imagenURL=? WHERE id=? ",[titulo,texto,imagenURL,id], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Noticia modificada", "items":JSON.stringify(results.insertId)});
+    }
   });
 });
 
@@ -384,7 +603,13 @@ app.delete('/EliminarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega 
   let id = req.params.id;
   
   connection.query("DELETE FROM noticias WHERE id=? ",id, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Noticia eliminada", "items":JSON.stringify(results.insertId)});
+    }
   });
   
 });
@@ -464,14 +689,41 @@ app.post('/GuardarIntegranteEnTabla',jsonParser,(req:any, res:any) => {//se agre
   console.log(id,nombre,cargo,descripcion,imagen);
   
   connection.query("insert into integrante (id,nombre,cargo,descripcion,imagen) values(?,?,?,?,?)",[id,nombre,cargo,descripcion,imagen], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+
+    if (error) {
+      res.send(error);
+    }
+    else{
+      res.status(201).send({"status":"Integrante creado y guardado", "items":JSON.stringify(results.insertId)});
+    }
   });
 });
 
 app.get('/Integrantes', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
+  let integrantes:Array<any> = [];
   connection.query("select * from integrante", function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else
+    {
+      for (let row of results) {
+        integrantes.push(row);
+      }
+      console.log(results);
+
+      if (integrantes.length != 0) {
+        res.status(200).send({"status":"Integrantes encontrados y cargados", "items":integrantes});
+        
+      }
+      else{
+        res.status(404).send("No se encontraron los integrantes verifiquen si estan creadas");
+      }
+    }
+  
   });
   //res.send(JSON.stringify(Usuarios))
 });
@@ -479,9 +731,28 @@ app.get('/Integrantes', (req:any, res:any) => { //url, coolback solicitud y resp
 app.get('/IntegranteEspecifico/:id', (req:any, res:any) => { //url, coolback solicitud y respuesta
   //con conexion establecida
   const id = req.params.id;
-
+  let integrantes:Array<any> = [];
   connection.query("SELECT * FROM integrante WHERE id=?",id, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else
+    {
+      for (let row of results) {
+        integrantes.push(row);
+      }
+      console.log(results);
+
+      if (integrantes.length != 0) {
+        res.status(200).send({"status":"Integrante encontrado y cargado", "items":integrantes});
+        
+      }
+      else{
+        res.status(404).send("No se encontraron los integrantes verifiquen si estan creadas");
+      }
+    }
+    
   });
   //res.send(JSON.stringify(Usuarios))
 });
@@ -495,7 +766,13 @@ app.put('/ModificarIntegrante/:id',jsonParser,(req:any, res:any) => {//se agrega
   let imagen = req.body.imagen;
 
   connection.query("UPDATE integrante set nombre=?, cargo=?, descripcion=?, imagen=? WHERE id=? ",[nombre, cargo, descripcion, imagen, id], function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Integrante modificado", "items":JSON.stringify(results.insertId)});
+    }
   });
 });
 
@@ -503,7 +780,13 @@ app.delete('/EliminarIntegrante/:id',jsonParser,(req:any, res:any) => {//se agre
   let id = req.params.id;
   
   connection.query("DELETE FROM integrante WHERE id=? ",id, function(error:any, results:any, fields:any){
-    res.send(JSON.stringify(results.insertId));
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error de servidor verifique el estado del mismo");
+    }
+    else{
+      res.status(200).send({"status":"Noticia eliminada", "items":JSON.stringify(results.insertId)});
+    }
   });
   
 });

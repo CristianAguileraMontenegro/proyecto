@@ -79,8 +79,8 @@ export class PerfilAdminComponent implements OnInit {
   cargarNoticias(){
     this.servicioNoticia.consultarNoticias().subscribe(Observador =>{
 
-        for (let i = 0; i < Observador.length; i++) {
-          this.listaDeNoticias.push({titulo:Observador[i].titulo, texto:Observador[i].texto, id:Observador[i].id, imagenURL:Observador[i].imagenURL});
+        for (let i = 0; i < Observador.items.length; i++) {
+          this.listaDeNoticias.push({titulo:Observador.items[i].titulo, texto:Observador.items[i].texto, id:Observador.items[i].id, imagenURL:Observador.items[i].imagenURL});
         }
     });
   };
@@ -88,17 +88,17 @@ export class PerfilAdminComponent implements OnInit {
   cargarIntegrante(){
     this.servicioIntegrante.consultarIntegrantes().subscribe(Observador =>{
 
-      for (let i = 0; i < Observador.length; i++) {
-        this.listaDeIntegrantes.push({id:Observador[i].id, nombre:Observador[i].nombre, cargo:Observador[i].cargo, descripcion:Observador[i].descripcion, imagen:Observador[i].imagen});
+      for (let i = 0; i < Observador.items.length; i++) {
+        this.listaDeIntegrantes.push({id:Observador.items[i].id, nombre:Observador.items[i].nombre, cargo:Observador.items[i].cargo, descripcion:Observador.items[i].descripcion, imagen:Observador.items[i].imagen});
       }
     });
   };
 
   cargarArtistas(){
     this.servicioArtista.consultarArtista().subscribe(Observador =>{
-      for (let i = 0; i < Observador.length; i++) {
-        this.listaDeArtistas.push({id:Observador[i].id_Artistas, nombreReal:Observador[i].nombreReal, nombreArtista:Observador[i].nombreArtista, correo:Observador[i].correo, contrasena:Observador[i].contrasena, 
-          nacionalidad:Observador[i].nacionalidad, descripcion:Observador[i].descripcion, obrasArtista:[] ,fotoDePerfilULR:"" ,tipoDeDisplay:Observador[i].tipoDeDisplaytipoDeDisplay});
+      for (let i = 0; i < Observador.items.length; i++) {
+        this.listaDeArtistas.push({id:Observador.items[i].id_Artistas, nombreReal:Observador.items[i].nombreReal, nombreArtista:Observador.items[i].nombreArtista, correo:Observador.items[i].correo, contrasena:Observador.items[i].contrasena, 
+          nacionalidad:Observador.items[i].nacionalidad, descripcion:Observador.items[i].descripcion, obrasArtista:[] ,fotoDePerfilULR:"" ,tipoDeDisplay:Observador.items[i].tipoDeDisplaytipoDeDisplay});
       }
     });
   }

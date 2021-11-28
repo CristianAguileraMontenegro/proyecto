@@ -14,7 +14,7 @@ import { ArtistasService} from '../../servicios/artistas.service';
 })
 export class PerfilComponent implements OnInit {
 
-  listaArtistas:any;
+  //listaArtistas:any;
   artistaRecibido:number = 0;
   artistaActual: any;
 
@@ -116,9 +116,9 @@ export class PerfilComponent implements OnInit {
   //--------------------------Imagnes------------------------------
   obtenerObrasDeArtista(id: number){
     this.servicioImagenes.consultarObrasTabla(id).subscribe(Observador=>{
-      for (let i = 0; i <  Observador.length; i++) {
-        this.obras.push(Observador[i]);
-       
+      for (let i = 0; i <  Observador.items.length; i++) {
+        this.obras.push(Observador.items[i]);
+
       }
       this.mostrarObras();
     })
@@ -142,20 +142,20 @@ export class PerfilComponent implements OnInit {
   }
 
   obtenerNombreObras(){
-    this.servicioArtistas.obtenerNombreObras().subscribe(Observador=>{
-      for (let i = 0; i <  Observador.length; i++) 
+    this.servicioArtistas.obtenerNombreObras().subscribe(Observador=>{//necesitadas para las verificaciones de nombre
+      for (let i = 0; i <  Observador.items.length; i++) 
       {
-        this.nombreDeObras.push(Observador[i]);
+        this.nombreDeObras.push(Observador.items[i]);
+        console.log(Observador.items[i]);
       }
     });
   }
 
   obtenerNombreObrasArtista(){
     this.servicioArtistas.obtenerNombreObrasArtista(this.artistaRecibido).subscribe(Observador=>{
-      for (let i = 0; i <  Observador.length; i++) 
+      for (let i = 0; i <  Observador.items.length; i++) 
       {
-        this.nombreDeObrasArtista.push(Observador[i]);
-        console.log(Observador[i]);
+        this.nombreDeObrasArtista.push(Observador.items[i]);
       }
     });
   }
@@ -179,16 +179,15 @@ export class PerfilComponent implements OnInit {
       for (let j = 0; j < this.imageInfos.length && flag; j++) {
           
         console.log("hola"+j);
-        if(this.imageInfos[j].name == Observador[0].fotoDePerfilULR){
+        if(this.imageInfos[j].name == Observador.items[0].fotoDePerfilULR){
             
             flag = false;
-            this.artistaActual = {id:Observador[0].id_Artistas, nombreReal:Observador[0].nombreReal, nombreArtista:Observador[0].nombreArtista, correo:Observador[0].correo, contrasena:Observador[0].contrasena, 
-            nacionalidad:Observador[0].nacionalidad, descripcion:Observador[0].descripcion, obrasArtista:[],fotoDePerfilULR:this.imageInfos[j].url ,tipoDeDisplay:Observador[0].tipoDeDisplaytipoDeDisplay}
+            this.artistaActual = {id:Observador.items[0].id_Artistas, nombreReal:Observador.items[0].nombreReal, nombreArtista:Observador.items[0].nombreArtista, correo:Observador.items[0].correo, contrasena:Observador.items[0].contrasena, 
+            nacionalidad:Observador.items[0].nacionalidad, descripcion:Observador.items[0].descripcion, obrasArtista:[],fotoDePerfilULR:this.imageInfos[j].url ,tipoDeDisplay:Observador.items[0].tipoDeDisplaytipoDeDisplay}
 
-            this.listaArtistas = this.servicioArtistas.consultarArtista();
+            //this.listaArtistas = this.servicioArtistas.consultarArtista();
             this.obtenerObrasDeArtista(this.artistaRecibido);
-            console.log("el artista actual");
-            console.log(this.artistaActual.id);
+            
         }
       }
 
@@ -323,6 +322,8 @@ export class PerfilComponent implements OnInit {
       }
     }*/
 
+    console.log(flagNombreObra,flagNombreObraArtista);
+
     if (flagNombreObra == true || flagNombreObraArtista == true) {
 
       return true;//si se repite retorna true;
@@ -405,13 +406,21 @@ export class PerfilComponent implements OnInit {
   validacionNombreObraEditar():boolean{
     let nombreObra:any = document.getElementById("nombreObraEditar");
     let nombreGoblal:any;
-    let cantidadDeRepeticiones:number = 0;
+    
     let flagNombreObra:boolean = false;
+    let flagNombreObraArtista:boolean = false;
 
     for(let i = 0; i < this.nombreDeObras.length; i++)
     {
       if (this.nombreDeObras[i].nombre == nombreObra.value) {
-        cantidadDeRepeticiones=cantidadDeRepeticiones+1;
+        flagNombreObra = true
+      }
+    }
+
+    for(let i = 0; i < this.nombreDeObrasArtista.length; i++)
+    {
+      if (this.nombreDeObrasArtista[i].nombre == nombreObra.value) {
+       flagNombreObraArtista = true;
       }
     }
 
@@ -431,9 +440,9 @@ export class PerfilComponent implements OnInit {
       }
     }*/
 
-    if (cantidadDeRepeticiones > 1) {
+    if (flagNombreObra == true || flagNombreObraArtista == true) {
 
-      return true;//si se mas de una vez retorna true, ya que la repeticion corresponde a si mismo
+      return true;//si se repite retorna true;
       
     }
 

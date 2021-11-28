@@ -36,24 +36,63 @@ app.use(cors());
 //back-end admin
 app.get('/Admin', function (req, res) {
     //con conexion establecida
+    var admin;
     connection.query("select * from admin", function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            res.status(404).send("No se encontro el perfil de administrador verifique su creación");
+        }
+        else {
+            for (var _i = 0, results_1 = results; _i < results_1.length; _i++) {
+                var row = results_1[_i];
+                admin = { id_Admin: row.id_Admin, correo: row.correo, contraseña: row.contraseña };
+            }
+            res.status(200).send({ "status": "Admin encontrado y cargado", "items": admin });
+            console.log("Admistrador encontrado");
+        }
     });
 });
 //back-end admin
 //back-end artistas y obras
 app.get('/Artistas', function (req, res) {
     //con conexion establecida
+    var artistas = [];
     connection.query("select * from artistas", function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            res.status(404).send("No se encontraron artistas verifique que se encuentre conectado a la base de datos");
+        }
+        else {
+            for (var _i = 0, results_2 = results; _i < results_2.length; _i++) {
+                var row = results_2[_i];
+                artistas.push(row);
+            }
+            res.status(200).send({ "status": "artista ok", "items": artistas });
+            console.log("Artistas obtenidos");
+        }
     });
     //res.send(JSON.stringify(Usuarios))
 });
 app.get('/Artistas/:id', function (req, res) {
     //con conexion establecida
     var id_Artista = req.params.id;
+    var artistas = [];
     connection.query("SELECT * FROM artistas WHERE id_ArtistaS=?", id_Artista, function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            res.status(404).send("No se encontraron el artista verifique que se encuentre conectado a la base de datos o este creado");
+            console.log(error);
+        }
+        else {
+            for (var _i = 0, results_3 = results; _i < results_3.length; _i++) {
+                var row = results_3[_i];
+                artistas.push(row);
+            }
+            if (artistas.length != 0) {
+                res.status(200).send({ "status": "artista encontrado", "items": artistas });
+                console.log("Artista" + id_Artista + "obtenidos");
+            }
+            else {
+                res.status(404).send("No se encontraron el artista verifique que se encuentre conectado a la base de datos o este creado");
+            }
+        }
     });
     //res.send(JSON.stringify(Usuarios))
 });
@@ -69,7 +108,12 @@ app.post('/GuardarArtistas', jsonParser, function (req, res) {
     var tipoDeDisplaytipoDeDisplay = req.body.tipoDeDisplay;
     console.log(id_Artistas, nombreReal, nombreArtista, correo, contrasena, nacionalidad, descripcion, fotoDePerfilULR, tipoDeDisplaytipoDeDisplay);
     connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)", [id_Artistas, nombreReal, nombreArtista, correo, contrasena, nacionalidad, descripcion, fotoDePerfilULR, tipoDeDisplaytipoDeDisplay], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            res.send(error);
+        }
+        else {
+            res.status(201).send({ "status": "Artista Creado y guardado", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.post('/GuardarObrasEnTabla', jsonParser, function (req, res) {
@@ -80,7 +124,12 @@ app.post('/GuardarObrasEnTabla', jsonParser, function (req, res) {
     var id_DelArtista = req.body.idArtista;
     console.log(id, nombre, descripcion, ulr, id_DelArtista);
     connection.query("insert into obras (id,nombre,descripcion,ulr,id_DelArtista) values(?,?,?,?,?)", [id, nombre, descripcion, ulr, id_DelArtista], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            res.send(error);
+        }
+        else {
+            res.status(201).send({ "status": "Obra creada y guardada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.post('/subirImagenPerfil', function (req, res, next) {
@@ -141,8 +190,20 @@ app.post('/subirObras', function (req, res, next) {
 app.get('/ObrasEspecificas/:id', function (req, res) {
     //con conexion establecida
     var idArtista = req.params.id;
+    var Obras = [];
     connection.query("SELECT * FROM obras WHERE id_DelArtista=?", idArtista, function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            for (var _i = 0, results_4 = results; _i < results_4.length; _i++) {
+                var row = results_4[_i];
+                Obras.push(row);
+            }
+            res.status(200).send({ "status": "Obras encontradas", "items": Obras });
+            console.log("Obras del artista" + idArtista + "obtenidas");
+        }
     });
     //res.send(JSON.stringify(Usuarios))
 });
@@ -150,14 +211,26 @@ app.put('/modificarFotoPerfil/:id', jsonParser, function (req, res) {
     var id = req.body.id;
     var ulr = req.body.url;
     connection.query("UPDATE artistas SET fotoDePerfilULR=? WHERE id_Artistas=? ", [ulr, id], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Foto de perfil modificada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.put('/modificarTipoDisplay/:id', jsonParser, function (req, res) {
     var id = req.body.id;
     var tipoDeDisplay = req.body.tipoDeDisplay;
     connection.query("UPDATE artistas SET tipoDeDisplaytipoDeDisplay=? WHERE id_Artistas=? ", [tipoDeDisplay, id], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Tipo de perfil modificado", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.put('/modificarDatosArtista/:id', jsonParser, function (req, res) {
@@ -169,7 +242,13 @@ app.put('/modificarDatosArtista/:id', jsonParser, function (req, res) {
     var nacionalidad = req.body.nacionalidad;
     var descripcion = req.body.descripcion;
     connection.query("UPDATE artistas set nombreReal=?, nombreArtista=?, correo=?, contrasena=?, nacionalidad=?, descripcion=? WHERE id_Artistas=? ", [nombreReal, nombreArtista, correo, contrasena, nacionalidad, descripcion, id], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Artista modificado", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.put('/modificarDatosObra/:id', jsonParser, function (req, res) {
@@ -178,41 +257,94 @@ app.put('/modificarDatosObra/:id', jsonParser, function (req, res) {
     var descripcion = req.body.descripcion;
     var ulr = req.body.ulr;
     var id_DelArtista = req.body.id_DelArtista;
-    console.log(nombre, descripcion, ulr, id_DelArtista, id);
     connection.query("UPDATE obras set nombre=?, descripcion=?, ulr=? WHERE id_DelArtista=? AND id =?", [nombre, descripcion, ulr, id_DelArtista, id], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Obra modificado", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.delete('/EliminarArtista/:id', jsonParser, function (req, res) {
     var id = req.params.id;
-    console.log("el id es " + id);
     connection.query("DELETE FROM artistas WHERE id_Artistas=? ", id, function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Artista Eliminado", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.delete('/EliminarObrasArtista/:id', jsonParser, function (req, res) {
     var id = req.params.id;
-    console.log("el id es " + id);
     connection.query("DELETE FROM obras WHERE id_DelArtista=? ", id, function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Obras Eliminada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.delete('/EliminarObraEspecifica/:nombre', jsonParser, function (req, res) {
     var nombre = req.params.nombre;
     console.log(nombre);
     connection.query("DELETE FROM obras WHERE nombre=?", nombre, function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Obra Eliminada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.get('/ObtenerNombreObras', function (req, res) {
+    var obras = [];
     connection.query("select nombre from obras", function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            for (var _i = 0, results_5 = results; _i < results_5.length; _i++) {
+                var row = results_5[_i];
+                obras.push(row);
+            }
+            if (obras.length != 0) {
+                res.status(200).send({ "status": "obras encontradas", "items": obras });
+            }
+            else {
+                res.status(404).send("No se encontraron los nombres de las obras verifiquen si estan creadas");
+            }
+        }
     });
 });
 app.get('/ObtenerNombreObrasArtista/:id', function (req, res) {
     var id = req.params.id;
+    var obras = [];
     connection.query("SELECT nombre FROM obras WHERE id_DelArtista=?", id, function (error, results, fields) {
-        res.send(JSON.stringify(results)); //results solo al ser un get
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            for (var _i = 0, results_6 = results; _i < results_6.length; _i++) {
+                var row = results_6[_i];
+                obras.push(row);
+            }
+            if (obras.length != 0) {
+                res.status(200).send({ "status": "obras encontradas", "items": obras });
+            }
+            else {
+                res.status(404).send("No se encontraron los nombres de las obras verifiquen si estan creadas");
+            }
+        }
     });
 });
 //obtener imganes de folders
@@ -261,21 +393,64 @@ app.post('/GuardarNoticiasEnTabla', jsonParser, function (req, res) {
     var imagenURL = req.body.imagenURL;
     console.log(id, titulo, texto, imagenURL);
     connection.query("insert into noticias (titulo,texto,id,imagenURL) values(?,?,?,?)", [titulo, texto, id, imagenURL], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            res.send(error);
+        }
+        else {
+            res.status(201).send({ "status": "Noticia creada y guardada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.get('/Noticias', function (req, res) {
     //con conexion establecida
+    var noticias = [];
     connection.query("select * from noticias", function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            for (var _i = 0, results_7 = results; _i < results_7.length; _i++) {
+                var row = results_7[_i];
+                console.log("hola");
+                noticias.push(row);
+                console.log(row);
+            }
+            console.log(results);
+            if (noticias.length != 0) {
+                res.status(200).send({ "status": "Noticias Encontradas encontradas", "items": noticias });
+            }
+            else {
+                res.status(404).send("No se encontraron las noticias verifiquen si estan creadas");
+            }
+        }
     });
     //res.send(JSON.stringify(Usuarios))
 });
 app.get('/NoticiaEspecificas/:id', function (req, res) {
     //con conexion establecida
     var id = req.params.id;
+    var noticias = [];
     connection.query("SELECT * FROM noticias WHERE id=?", id, function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            for (var _i = 0, results_8 = results; _i < results_8.length; _i++) {
+                var row = results_8[_i];
+                console.log("hola");
+                noticias.push(row);
+                console.log(row);
+            }
+            console.log(results);
+            if (noticias.length != 0) {
+                res.status(200).send({ "status": "Noticia encontrada", "items": noticias });
+            }
+            else {
+                res.status(404).send("No se encontraron las noticias verifiquen si estan creadas");
+            }
+        }
     });
     //res.send(JSON.stringify(Usuarios))
 });
@@ -286,13 +461,25 @@ app.put('/ModificarNoticia/:id', jsonParser, function (req, res) {
     var imagenURL = req.body.imagenURL;
     console.log(id, titulo, texto, imagenURL);
     connection.query("UPDATE noticias set titulo=?, texto=?, imagenURL=? WHERE id=? ", [titulo, texto, imagenURL, id], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Noticia modificada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.delete('/EliminarNoticia/:id', jsonParser, function (req, res) {
     var id = req.params.id;
     connection.query("DELETE FROM noticias WHERE id=? ", id, function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Noticia eliminada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.post('/subirNoticia', function (req, res, next) {
@@ -351,21 +538,60 @@ app.post('/GuardarIntegranteEnTabla', jsonParser, function (req, res) {
     var imagen = req.body.imagen;
     console.log(id, nombre, cargo, descripcion, imagen);
     connection.query("insert into integrante (id,nombre,cargo,descripcion,imagen) values(?,?,?,?,?)", [id, nombre, cargo, descripcion, imagen], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            res.send(error);
+        }
+        else {
+            res.status(201).send({ "status": "Integrante creado y guardado", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.get('/Integrantes', function (req, res) {
     //con conexion establecida
+    var integrantes = [];
     connection.query("select * from integrante", function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            for (var _i = 0, results_9 = results; _i < results_9.length; _i++) {
+                var row = results_9[_i];
+                integrantes.push(row);
+            }
+            console.log(results);
+            if (integrantes.length != 0) {
+                res.status(200).send({ "status": "Integrantes encontrados y cargados", "items": integrantes });
+            }
+            else {
+                res.status(404).send("No se encontraron los integrantes verifiquen si estan creadas");
+            }
+        }
     });
     //res.send(JSON.stringify(Usuarios))
 });
 app.get('/IntegranteEspecifico/:id', function (req, res) {
     //con conexion establecida
     var id = req.params.id;
+    var integrantes = [];
     connection.query("SELECT * FROM integrante WHERE id=?", id, function (error, results, fields) {
-        res.send(JSON.stringify(results));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            for (var _i = 0, results_10 = results; _i < results_10.length; _i++) {
+                var row = results_10[_i];
+                integrantes.push(row);
+            }
+            console.log(results);
+            if (integrantes.length != 0) {
+                res.status(200).send({ "status": "Integrante encontrado y cargado", "items": integrantes });
+            }
+            else {
+                res.status(404).send("No se encontraron los integrantes verifiquen si estan creadas");
+            }
+        }
     });
     //res.send(JSON.stringify(Usuarios))
 });
@@ -376,13 +602,25 @@ app.put('/ModificarIntegrante/:id', jsonParser, function (req, res) {
     var descripcion = req.body.descripcion;
     var imagen = req.body.imagen;
     connection.query("UPDATE integrante set nombre=?, cargo=?, descripcion=?, imagen=? WHERE id=? ", [nombre, cargo, descripcion, imagen, id], function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Integrante modificado", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.delete('/EliminarIntegrante/:id', jsonParser, function (req, res) {
     var id = req.params.id;
     connection.query("DELETE FROM integrante WHERE id=? ", id, function (error, results, fields) {
-        res.send(JSON.stringify(results.insertId));
+        if (error) {
+            console.log(error);
+            res.status(500).send("Error de servidor verifique el estado del mismo");
+        }
+        else {
+            res.status(200).send({ "status": "Noticia eliminada", "items": JSON.stringify(results.insertId) });
+        }
     });
 });
 app.post('/subirIntegrante', function (req, res, next) {

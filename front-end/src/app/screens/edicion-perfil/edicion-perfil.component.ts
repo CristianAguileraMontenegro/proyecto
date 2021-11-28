@@ -43,13 +43,25 @@ export class EdicionPerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.artistaAMoficar =  this.listaDeArtistas.find(objeto => objeto.id == this.artistaAMoficar);//buscamos y guardamos al artista que comparta el id
+
+    this.obtenerArtista();
+    
+  }
+
+  obtenerArtista(){
+    this.servicioArtistas.consultarArtistaEspecifco(this.artistaAMoficar).subscribe(Observador=>{
+        
+    this.artistaAMoficar = {id:Observador.items[0].id_Artistas, nombreReal:Observador.items[0].nombreReal, nombreArtista:Observador.items[0].nombreArtista, correo:Observador.items[0].correo, contrasena:Observador.items[0].contrasena, 
+    nacionalidad:Observador.items[0].nacionalidad, descripcion:Observador.items[0].descripcion, obrasArtista:[],fotoDePerfilULR:"" ,tipoDeDisplay:Observador.items[0].tipoDeDisplaytipoDeDisplay}
+
     this.formulario.get("correo")?.setValue(this.artistaAMoficar.correo);
     this.formulario.get("contrasena")?.setValue(this.artistaAMoficar.contrasena);
     this.formulario.get("nombre")?.setValue(this.artistaAMoficar.nombreReal);
     this.formulario.get("nombreArtistico")?.setValue(this.artistaAMoficar.nombreArtista);
     this.formulario.get("nacionalidad")?.setValue(this.artistaAMoficar.nacionalidad);
     this.formulario.get("descripcion")?.setValue(this.artistaAMoficar.descripcion);
+            //this.listaArtistas = this.servicioArtistas.consultarArtista(); 
+    });
   }
 
 

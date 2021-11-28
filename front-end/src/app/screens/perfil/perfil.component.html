@@ -40,19 +40,19 @@
     
                 <div class="container-fluid">
                     <div class="row obras" *ngIf="opcionDeDispocicionSeleccionada == 2">
-                        <div class="col-md-6 col-sm-6" *ngFor="let item of almacenadorDeImagenes; let i = index">
+                        <div class="col-md-6 col-sm-6" *ngFor="let item of obras; let i = index">
                             <div class="contendoreObras">
-                                <img src="{{item.url}}" alt="{{obras[i].nombre}}" class="obras2">
+                                <img src="{{almacenadorDeImagenes[i].url}}" alt="{{obras[i].nombre}}" class="obras2">
                                     <div class="overlay">
                                         <p class="descripcionObra">
-                                            {{obras[i].descripcion}}
+                                            {{item.descripcion}}
                                             
                                         </p>
                                     </div>
                                     <div class="contendorDeNombre">
                                         <p class="nombreObras">{{obras[i].nombre}}</p>
-                                        <button type="button" class="btn btn-outline-success" (click)="eliminarObra(obras[i].id, obras[i].nombre)" id="botonEliminarObra">Eliminar</button>
-                                        <button type="button" class="btn btn-outline-success" (click)="open(contentEditar);llenarForm(obras[i])" id="botonEditarObraObra">Editar</button>
+                                        <button type="button" class="btn btn-outline-success" (click)="eliminarObra(item.id, item.nombre)" id="botonEliminarObra">Eliminar</button>
+                                        <button type="button" class="btn btn-outline-success" (click)="open(contentEditar);llenarForm(item)" id="botonEditarObraObra">Editar</button>
                                     </div>
                             </div>
                            

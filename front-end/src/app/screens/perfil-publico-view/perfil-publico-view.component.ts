@@ -11,7 +11,7 @@ import { ArtistasService} from '../../servicios/artistas.service';
 })
 export class PerfilPublicoViewComponent implements OnInit {
 
-  listaArtistas:any;
+  //listaArtistas:any;
   artistaRecibido:number = 0;
   artistaActual: any;
 
@@ -84,9 +84,9 @@ export class PerfilPublicoViewComponent implements OnInit {
   //--------------------------Imagnes------------------------------
   obtenerObrasDeArtista(id: number){
     this.servicioImagenes.consultarObrasTabla(id).subscribe(Observador=>{
-      for (let i = 0; i <  Observador.length; i++) {
-        this.obras.push(Observador[i]);
-       
+      for (let i = 0; i <  Observador.items.length; i++) {
+        this.obras.push(Observador.items[i]);
+
       }
       this.mostrarObras();
     })
@@ -128,16 +128,15 @@ export class PerfilPublicoViewComponent implements OnInit {
       for (let j = 0; j < this.imageInfos.length && flag; j++) {
           
         console.log("hola"+j);
-        if(this.imageInfos[j].name == Observador[0].fotoDePerfilULR){
+        if(this.imageInfos[j].name == Observador.items[0].fotoDePerfilULR){
             
             flag = false;
-            this.artistaActual = {id:Observador[0].id_Artistas, nombreReal:Observador[0].nombreReal, nombreArtista:Observador[0].nombreArtista, correo:Observador[0].correo, contrasena:Observador[0].contrasena, 
-            nacionalidad:Observador[0].nacionalidad, descripcion:Observador[0].descripcion, obrasArtista:[],fotoDePerfilULR:this.imageInfos[j].url ,tipoDeDisplay:Observador[0].tipoDeDisplaytipoDeDisplay}
+            this.artistaActual = {id:Observador.items[0].id_Artistas, nombreReal:Observador.items[0].nombreReal, nombreArtista:Observador.items[0].nombreArtista, correo:Observador.items[0].correo, contrasena:Observador.items[0].contrasena, 
+            nacionalidad:Observador.items[0].nacionalidad, descripcion:Observador.items[0].descripcion, obrasArtista:[],fotoDePerfilULR:this.imageInfos[j].url ,tipoDeDisplay:Observador.items[0].tipoDeDisplaytipoDeDisplay}
 
-            this.listaArtistas = this.servicioArtistas.consultarArtista();
+            //this.listaArtistas = this.servicioArtistas.consultarArtista();
             this.obtenerObrasDeArtista(this.artistaRecibido);
-            console.log("el artista actual");
-            console.log(this.artistaActual)
+            
         }
       }
 

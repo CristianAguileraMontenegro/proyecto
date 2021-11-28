@@ -3,6 +3,8 @@ import {FormBuilder,FormControl, FormGroup, Validators} from '@angular/forms';//
 import {listaArtistas} from '../../interfaces/artistas';
 import {adminPrueba} from '../../interfaces/admin';
 import { Router } from '@angular/router';
+import {AdminService} from '../../servicios/admin.service';
+import {ArtistasService} from '../../servicios/artistas.service';
 
 @Component({
   selector: 'app-login',
@@ -17,11 +19,11 @@ export class LoginComponent implements OnInit {
 
 
   listaArtistasComprobar = listaArtistas;
-  adminComprobar = adminPrueba;
+  adminComprobar:any
 
   flagContrasenaGeneral:boolean = true;
 
-  constructor(public FormB:FormBuilder, private router:Router) {
+  constructor(public FormB:FormBuilder, private router:Router, private servicioAdmin:AdminService, private servicioArtista:ArtistasService) {
     this.formulario=FormB.group({
       correo:["",[Validators.required]], //los "" son el value
       contrasena:["",[Validators.required]], //min y max para tipo number
@@ -30,6 +32,10 @@ export class LoginComponent implements OnInit {
     
   }
   ngOnInit(): void {
+    this.listaArtistasComprobar.length = 0;
+    this.adminComprobar = {};
+    this.cargarArtistas();
+    this.obtenerAdmin();
   }
 
   validarCorreoIngresadoArtista():boolean{
@@ -180,8 +186,6 @@ export class LoginComponent implements OnInit {
 
         let correoArtista:any = document.getElementById("correo"); //////
         let flag = true;
-        
-
         for(let i = 0; i < this.listaArtistasComprobar.length && flag; i++)
         {
             if((this.listaArtistasComprobar[i].correo.localeCompare(correoArtista.value) == 0))
@@ -190,20 +194,32 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(['/perfil',this.listaArtistasComprobar[i].id]);///agregar ruta hacia el perfil con el id
             }
         }
-        
-        
       }
     }
     else{
       if(this.formulario.valid && this.validacion()){
         this.router.navigate(['/admin']);///agregar ruta hacia el perfil con el id
-
-        
       }
-    }
+    }  
+  }
 
+  obtenerAdmin(){
+    this.servicioAdmin.consultarAdmin().subscribe(Observador=>{
+     
+        this.adminComprobar.id = Observador.items.id_Admin;
+        this.adminComprobar.correo = Observador.items.correo;
+        this.adminComprobar.contrasena = Observador.items.contraseña;
+     
+    });
+  }
 
-    
-}
+  cargarArtistas(){
+    this.servicioArtista.consultarArtista().subscribe(Observador =>{
+      for (let i = 0; i < Observador.items.length; i++) {
+        this.listaArtistasComprobar.push({id:Observador.items[i].id_Artistas, nombreReal:Observador.items[i].nombreReal, nombreArtista:Observador.items[i].nombreArtista, correo:Observador.items[i].correo, contrasena:Observador.items[i].contrasena, 
+          nacionalidad:Observador.items[i].nacionalidad, descripcion:Observador.items[i].descripcion, obrasArtista:[] ,fotoDePerfilULR:"" ,tipoDeDisplay:Observador.items[i].tipoDeDisplaytipoDeDisplay});
+      }
+    });
+  }
 
 }
