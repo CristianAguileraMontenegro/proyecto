@@ -6,26 +6,19 @@
 
 #contenedorDeTitulo{
     position: relative;
-    border-style: solid;
-    border-color: rgb(0, 0, 0);
-    border-width: 1px;
     width: 80%;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
+    color: gray;
+    font-family: 'Architects Daughter', cursive;
+    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
-.col-md-7.col-sm-4{
-    border-color: rgb(0, 0, 0);
-    border-style: solid;
-    border-width: 3px;
-}
 
 #contenedorImagen{
     position: relative;
-    border-style: solid;
-    border-color: rgb(0, 0, 0);
-    border-width: 1px;
     width: 80%;
     left: 50%;
     transform: translateX(-50%);
@@ -40,20 +33,41 @@
     transform: translateX(-50%);
 }
 
-#contenedorDeObras{
-    border-style: solid;
-    border-color: rgb(0, 0, 0);
-    border-width: 3px;
+#iconoEditar{
+    position: relative;
+    margin-left: 70%;
 }
 
+
+/////////////////////////////////////////////
+
+
 #contenedorBotones{
-    border-style: solid;
-    border-color: rgb(0, 0, 0);
-    border-width: 1px;
     width: 80%;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+}
+
+#botonEditarPerfil{
+    border-radius: 25px;
+    background: rgb(13, 137, 232);
+    width: 50%;
+    border-color: rgb(13, 137, 232);
+    text-align: center;
+  
+}
+
+#iconoEditar2{
+    position: relative;
+    float: right;
+}
+
+#botonAgregarObra{
+    border-radius: 25px;
+    background: rgb(0, 0, 0);
+    width: 50%;
+    border-color: rgb(0, 0, 0);
 }
 
 #contenedorBotones button{
@@ -64,12 +78,9 @@
     margin-top: 2%;
 }
 
-#contenedorBotones input{
+#fotoDePerfilInput{
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    display: block;
-    margin-top: 2%;
+    text-align: center;
 }
 
 
@@ -83,25 +94,15 @@
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
+    background-color: rgb(247, 247, 247);
 }
 
 ///obras
 
 .contendoreObras{
     position: relative;
-    border: 1px solid blue;
-}
-
-.contendoreObras{
-    position: relative;
-    border: 1px solid blue;
-
-}
-
-.contendoreObras{
-    position: relative;
-    border: 1px solid blue;
-
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 25px;
 }
 
 .obras2{
@@ -112,6 +113,8 @@
     border-color: rgb(0, 0, 0);
     border-style: solid;
     border-width: 1px;
+
+    border-radius: 25px;
 }
 
 .obras3{
@@ -122,6 +125,8 @@
     border-color: rgb(0, 0, 0);
     border-style: solid;
     border-width: 1px;
+
+    border-radius: 25px;
 }
 
 .obras4{
@@ -132,9 +137,30 @@
     border-color: rgb(0, 0, 0);
     border-style: solid;
     border-width: 1px;
+
+    border-radius: 25px;
 }
 
+.contendorDeNombre{
+    text-align: center;
+}
 
+.btn.btn-outline-success.EliminarObra{
+    border-radius: 25px;
+    background: rgb(12, 141, 228);
+    width: 50%;
+    border-color: rgb(12, 141, 228);
+    color: white;
+
+}
+
+.btn.btn-outline-success.EditarObraObra{
+    border-radius: 25px;
+    background: rgb(12, 141, 228);
+    width: 50%;
+    border-color: rgb(12, 141, 228);
+    color: white;
+}
 
 .overlay{
     position: absolute;
@@ -151,6 +177,7 @@
     justify-content: center;
     opacity: 0;
     transition: opacity 0.25s;
+    border-radius: 25px;
 }
 
 
@@ -169,9 +196,6 @@
 }
 
 .descripcionObra{
-    border-color: rgb(0, 0, 0);
-    border-style: solid;
-    border-width: 1px;
     width: 100%;
     font-size: 1.5em;
     text-align: center;

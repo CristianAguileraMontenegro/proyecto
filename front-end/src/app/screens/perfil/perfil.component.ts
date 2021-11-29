@@ -262,7 +262,7 @@ export class PerfilComponent implements OnInit {
   }*/
 
   modificarImagen(){
-    let input:any = document.getElementById("fotoDePerfil");//obtenemos el input de imagen
+    let input:any = document.getElementById("fotoDePerfilInput");//obtenemos el input de imagen
     input.style.display = "inline";//mostramos el mismo
   }
 
@@ -282,7 +282,7 @@ export class PerfilComponent implements OnInit {
   }
 
   ocularInputFotoPerfil(){
-    let input:any = document.getElementById("fotoDePerfil");
+    let input:any = document.getElementById("fotoDePerfilInput");
     input.style.display = "none"
   }
 

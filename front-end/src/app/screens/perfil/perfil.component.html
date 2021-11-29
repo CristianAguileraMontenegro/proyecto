@@ -8,15 +8,25 @@
                 </div>
                 
                 <div id="contenedorImagen">
-                    <span class="material-icons" (click)="modificarImagen()">edit</span>
-                    <input id="fotoDePerfil" (change)="capturarImagenPerfil($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg" style="display: none;" >
-                    <img [src]="artistaActual.fotoDePerfilULR " alt="" id="imagen">
+                    <div>
+                        <span class="material-icons" (click)="modificarImagen()" id="iconoEditar">edit</span>
+                    </div>
+                    <div>
+                        
+                        <img [src]="artistaActual.fotoDePerfilULR " alt="" id="imagen">
+                        <div>
+                            <input id="fotoDePerfilInput" (change)="capturarImagenPerfil($event)"  type="file" data-show-preview="false" accept="image/png, image/jpeg" style="display: none;" >
+                        </div>
+                    </div>
+                    
+                    
                     
                 </div>
     
                 <div id="contenedorBotones">
-                    <button id="botonEditarPerfil" type="button" (click)="llevarAEdicion()">Editar tu perfil</button>
-                    <button id="botonAgregarObra" type="button" (click)="open(content)">Agregar obras</button>
+                    <button id="botonEditarPerfil" type="button" class="btn btn-primary" (click)="llevarAEdicion()">Editar tu perfil<span class="material-icons" (click)="modificarImagen()" id="iconoEditar2">edit</span>
+                    </button>
+                    <button id="botonAgregarObra" type="button" class="btn btn-primary" (click)="open(content)">Agregar obras</button>
                 </div>
     
                 <div id="contenedorDatosPersonales">
@@ -28,7 +38,7 @@
             </div>
             <div class="col-md-7 col-sm-4" id="contenedorDeObras" *ngIf="hayObras == true"> <!--Esto debe ser un ngif-->
                <!--dentro debe de tener un ngfor qu recorra el arreglo de obras-->
-                <div>
+                <div id="estilo">
                     <label for="estilo">Estilo</label>
                     <select (change)="elegirOpcion($event)" aria-label="Default select example" id="estilo">
                         <option value="" disabled selected>Select</option>
@@ -51,8 +61,12 @@
                                     </div>
                                     <div class="contendorDeNombre">
                                         <p class="nombreObras">{{obras[i].nombre}}</p>
-                                        <button type="button" class="btn btn-outline-success" (click)="eliminarObra(item.id, item.nombre)" id="botonEliminarObra">Eliminar</button>
-                                        <button type="button" class="btn btn-outline-success" (click)="open(contentEditar);llenarForm(item)" id="botonEditarObraObra">Editar</button>
+                                        
+                                        <button type="button" class="btn btn-outline-success EliminarObra" (click)="eliminarObra(item.id, item.nombre)" >Eliminar</button>
+                                        
+                                        <button type="button" class="btn btn-outline-success EditarObraObra" (click)="open(contentEditar);llenarForm(item)" >Editar</button>
+                                        
+                                        
                                     </div>
                             </div>
                            
@@ -69,6 +83,9 @@
                                     </div>
                                     <div class="contendorDeNombre">
                                         <p class="nombreObras">{{obras[i].nombre}}</p>
+                                        <button type="button" class="btn btn-outline-success EliminarObra" (click)="eliminarObra(item.id, item.nombre)" >Eliminar</button>
+                                        
+                                        <button type="button" class="btn btn-outline-success EditarObraObra" (click)="open(contentEditar);llenarForm(item)" >Editar</button>
                                     </div>
                                 
                             </div>
@@ -86,6 +103,9 @@
                                     </div>
                                     <div class="contendorDeNombre">
                                         <p class="nombreObras">{{obras[i].nombre}}</p>
+                                        <button type="button" class="btn btn-outline-success EliminarObra" (click)="eliminarObra(item.id, item.nombre)" >Eliminar</button>
+                                        
+                                        <button type="button" class="btn btn-outline-success EditarObraObra" (click)="open(contentEditar);llenarForm(item)" >Editar</button>
                                     </div>
                             </div>
                             
