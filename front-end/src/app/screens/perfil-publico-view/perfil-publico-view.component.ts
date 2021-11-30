@@ -121,13 +121,12 @@ export class PerfilPublicoViewComponent implements OnInit {
   obtenerArtista(){
     this.servicioArtistas.consultarArtistaEspecifco(this.artistaRecibido).subscribe(Observador=>{
         
-      console.log("llegue");
       let flag:boolean = true;
       
       
       for (let j = 0; j < this.imageInfos.length && flag; j++) {
           
-        console.log("hola"+j);
+        
         if(this.imageInfos[j].name == Observador.items[0].fotoDePerfilULR){
             
             flag = false;

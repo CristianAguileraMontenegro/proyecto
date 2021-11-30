@@ -6,7 +6,8 @@ import {RegistroComponent} from './screens/registro/registro.component';
 import {PerfilComponent} from './screens/perfil/perfil.component';
 import { EdicionPerfilComponent } from './screens/edicion-perfil/edicion-perfil.component';
 import {PerfilAdminComponent} from './screens/perfil-admin/perfil-admin.component';
-import {PerfilPublicoViewComponent} from './screens/perfil-publico-view/perfil-publico-view.component'
+import {PerfilPublicoViewComponent} from './screens/perfil-publico-view/perfil-publico-view.component';
+import {NoticiaViewComponent} from './screens/noticia-view/noticia-view.component';
 
 const routes: Routes = [
   {path:"",redirectTo:"/inicio",pathMatch:"full"},
@@ -16,7 +17,8 @@ const routes: Routes = [
   {path:"perfil/:id", component:PerfilComponent},
   {path:"edicion/:id", component:EdicionPerfilComponent},
   {path:"admin", component:PerfilAdminComponent},
-  {path:"perfilPublico/:id", component:PerfilPublicoViewComponent}
+  {path:"perfilPublico/:id", component:PerfilPublicoViewComponent},
+  {path:"noticiaView/:id", component:NoticiaViewComponent},
 ];
 
 @NgModule({

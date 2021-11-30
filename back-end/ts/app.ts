@@ -137,7 +137,6 @@ app.post('/GuardarArtistas',jsonParser,(req:any, res:any) => {//se agrega body p
   let fotoDePerfilULR = req.body.fotoDePerfilULR;
   let tipoDeDisplaytipoDeDisplay = req.body.tipoDeDisplay;
 
-  console.log(id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay);
 
   connection.query("insert into artistas (id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay) values(?,?,?,?,?,?,?,?,?)",[id_Artistas,nombreReal,nombreArtista,correo,contrasena,nacionalidad,descripcion,fotoDePerfilULR,tipoDeDisplaytipoDeDisplay], function(error:any, results:any, fields:any){
     if (error) {
@@ -158,7 +157,7 @@ app.post('/GuardarObrasEnTabla',jsonParser,(req:any, res:any) => {//se agrega bo
   let ulr = req.body.ulr;
   let id_DelArtista = req.body.idArtista;
 
-  console.log(id,nombre,descripcion,ulr,id_DelArtista);
+  
   
   connection.query("insert into obras (id,nombre,descripcion,ulr,id_DelArtista) values(?,?,?,?,?)",[id,nombre,descripcion,ulr,id_DelArtista], function(error:any, results:any, fields:any){
     if (error) {
@@ -178,13 +177,13 @@ app.post('/subirImagenPerfil',(req:any,res:any,next:any)=>{
     form.parse(req, function(err:any, fields:any, files:any) {
 
       // `file` is the name of the <input> field of type `file`
-      console.log(files.file.originalFilename);
+     
       let old_path = files.file.filepath;
       let index = old_path.lastIndexOf('/') + 1;
       let file_name = old_path.substr(index);
       let new_path = __dirname+"/../../front-end/src/assets/imagenesPerfil/"+files.file.originalFilename;
 
-      console.log(new_path);
+      
       
       fs.readFile(old_path, function(err:any, data:any) {
         
@@ -214,15 +213,15 @@ app.post('/subirObras',(req:any,res:any,next:any)=>{
   const form1 = formidable({});
   
     form1.parse(req, function(err:any, fields:any, files:any) {
-      console.log("hola");
+      
       // `file` is the name of the <input> field of type `file`
-      console.log(files.file.originalFilename);
+      
       let old_path = files.file.filepath;
       let index = old_path.lastIndexOf('/') + 1;
       let file_name = old_path.substr(index);
       let new_path = __dirname+"/../../front-end/src/assets/obras/"+files.file.originalFilename;
 
-      console.log(new_path);
+      
       
       fs.readFile(old_path, function(err:any, data:any) {
         
@@ -336,6 +335,8 @@ app.put('/modificarDatosObra/:id',jsonParser,(req:any, res:any) => {//se agrega 
   let descripcion = req.body.descripcion; 
   let ulr = req.body.ulr;
   let id_DelArtista = req.body.id_DelArtista;
+
+  console.log("hola");
   
   connection.query("UPDATE obras set nombre=?, descripcion=?, ulr=? WHERE id_DelArtista=? AND id =?",[nombre,descripcion,ulr,id_DelArtista,id], function(error:any, results:any, fields:any){
     if (error) {
@@ -381,7 +382,7 @@ app.delete('/EliminarObrasArtista/:id',jsonParser,(req:any, res:any) => {//elimi
 app.delete('/EliminarObraEspecifica/:nombre',jsonParser,(req:any, res:any) => {//se agrega body parse almendio
   
   let nombre = req.params.nombre;
-  console.log(nombre);
+  
   connection.query("DELETE FROM obras WHERE nombre=?",nombre, function(error:any, results:any, fields:any){
     if (error) {
       console.log(error);
@@ -504,7 +505,7 @@ app.post('/GuardarNoticiasEnTabla',jsonParser,(req:any, res:any) => {//se agrega
   let titulo = req.body.titulo;
   let texto = req.body.texto;
   let imagenURL = req.body.imagenURL;
-  console.log(id,titulo,texto,imagenURL)
+
   
   connection.query("insert into noticias (titulo,texto,id,imagenURL) values(?,?,?,?)",[titulo,texto,id,imagenURL], function(error:any, results:any, fields:any){
 
@@ -530,7 +531,6 @@ app.get('/Noticias', (req:any, res:any) => { //url, coolback solicitud y respues
     else
     {
       for (let row of results) {
-        console.log("hola");
         noticias.push(row);
         console.log(row);
       }
@@ -562,7 +562,7 @@ app.get('/NoticiaEspecificas/:id', (req:any, res:any) => { //url, coolback solic
     else
     {
       for (let row of results) {
-        console.log("hola");
+        
         noticias.push(row);
         console.log(row);
       }
@@ -586,7 +586,7 @@ app.put('/ModificarNoticia/:id',jsonParser,(req:any, res:any) => {//se agrega bo
   let titulo = req.body.titulo;
   let texto = req.body.texto;
   let imagenURL = req.body.imagenURL;
-  console.log(id,titulo,texto,imagenURL);
+
   connection.query("UPDATE noticias set titulo=?, texto=?, imagenURL=? WHERE id=? ",[titulo,texto,imagenURL,id], function(error:any, results:any, fields:any){
 
     if (error) {
@@ -620,15 +620,15 @@ app.post('/subirNoticia',(req:any,res:any,next:any)=>{
   const form1 = formidable({});
   
     form1.parse(req, function(err:any, fields:any, files:any) {
-      console.log("hola");
+      
       // `file` is the name of the <input> field of type `file`
-      console.log(files.file.originalFilename);
+     
       let old_path = files.file.filepath;
       let index = old_path.lastIndexOf('/') + 1;
       let file_name = old_path.substr(index);
       let new_path = __dirname+"/../../front-end/src/assets/noticias/"+files.file.originalFilename;
 
-      console.log(new_path);
+      
       
       fs.readFile(old_path, function(err:any, data:any) {
         
@@ -686,7 +686,7 @@ app.post('/GuardarIntegranteEnTabla',jsonParser,(req:any, res:any) => {//se agre
   let descripcion = req.body.descripcion;
   let imagen = req.body.imagen;
   
-  console.log(id,nombre,cargo,descripcion,imagen);
+  
   
   connection.query("insert into integrante (id,nombre,cargo,descripcion,imagen) values(?,?,?,?,?)",[id,nombre,cargo,descripcion,imagen], function(error:any, results:any, fields:any){
 
@@ -797,15 +797,15 @@ app.post('/subirIntegrante',(req:any,res:any,next:any)=>{
   const form1 = formidable({});
   
     form1.parse(req, function(err:any, fields:any, files:any) {
-      console.log("hola");
+     
       // `file` is the name of the <input> field of type `file`
-      console.log(files.file.originalFilename);
+     
       let old_path = files.file.filepath;
       let index = old_path.lastIndexOf('/') + 1;
       let file_name = old_path.substr(index);
       let new_path = __dirname+"/../../front-end/src/assets/integrantes/"+files.file.originalFilename;
 
-      console.log(new_path);
+      
       
       fs.readFile(old_path, function(err:any, data:any) {
         

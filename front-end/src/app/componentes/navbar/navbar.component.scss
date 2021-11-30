@@ -1,0 +1,30 @@
+.nav li :hover{
+    color: rgb(78, 177, 238);
+}
+
+li a {
+    text-decoration:none;
+    color:white;
+    padding-right:3em;
+    position:relative;
+   }
+
+li a::after{
+    content:'';
+    position:absolute;
+    display:block;
+    height:0.4em;
+    width:0%;
+    background-color: black;
+    transition: ease-in-out 250ms;
+
+}
+
+li a:hover::after{
+    width:60%;
+}
+
+li:first-child{
+    margin-right:auto;
+    margin-left:3em;
+}

@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit {
     let flag = true;
     let flagContrasena = false;
 
-    console.log(this.listaArtistasComprobar)
+  
     for(let i = 0; i < this.listaArtistasComprobar.length && flag; i++)
     {
         if(this.listaArtistasComprobar[i].contrasena.localeCompare(contrasenaUsuario.value) == 0 && (this.listaArtistasComprobar[i].correo.localeCompare(correoArtista.value) == 0))

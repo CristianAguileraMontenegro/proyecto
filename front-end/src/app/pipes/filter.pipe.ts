@@ -5,11 +5,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterPipe implements PipeTransform {
 
-  transform(value: any, arg: any): any {
+  transform(value: any, arg: string): any {
+
+    if(arg === '' || arg.length < 3) return value;
     const resultadoArtista = [];
 
     for(const artista of value){
-      if(artista.nombreArtista.indexOf(arg) > -1){
+      if(artista.nombreArtista.toLowerCase().indexOf(arg.toLowerCase()) > -1){
         resultadoArtista.push(artista);
       }
     }

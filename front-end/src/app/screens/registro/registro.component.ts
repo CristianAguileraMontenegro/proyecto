@@ -61,7 +61,7 @@ export class RegistroComponent implements OnInit {
   capturarImagen(event:any){
     this.imagen = event.target.files[0];
     this.imagenNombre = event.target.files[0].name;
-    console.log(this.imagen);
+    
 
     let reader = new FileReader();
     reader.readAsDataURL(this.imagen);
@@ -134,7 +134,6 @@ export class RegistroComponent implements OnInit {
     })
     
     listaArtistas.push(artistiaAgregar);
-    console.log(artistiaAgregar);
     this.correoDeUsuario = true;
 
     return true;

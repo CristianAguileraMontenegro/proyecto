@@ -1,58 +1,171 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3">
-            <img src="assets/emiway-bantai-6547083.png" alt="" class="img-fluid" id="img">
+<div *ngIf="flag" class="TodoInicio">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <img src="assets/depositphotos_54499559-stock-photo-portrait-of-a-stylish-hipster.png" alt="" class="img-fluid" id="img">
+            </div>
+            <div class="col-md-8">
+                <div class="col-md-6">
+                    <h4>"Los artistas conceptuales son místicos más</h4>
+                    <h4>que racionalistas. Llegan a conclusiones a las</h4>
+                    <h4>que no llega la lógica" - Sol LeWitt</h4>
+                </div>
+    
+                     <div id="busquedaContenedor" class="align-self -center">
+                        <input id="busqueda" class="input-rounded" type="text"  name="filterArtista" [(ngModel)]="filterArtista">
+                        <span class="material-icons">search</span>
+                    </div>
+    
+    
+                <div class="container-fluid">
+                    <div class="row">
+                        <div *ngFor="let artista of artistas | filter:filterArtista" class="col-md-3 justify-content-center d-flex">
+                            <div class="card">
+                                <img [src]=artista.fotoDePerfilULR alt="fotos epicas" class="imgPErfil card-img-top">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{artista.nombreArtista}}</h4>
+                                    <h6 class="card-text"> {{artista.nombreReal}} </h6>
+                                    <button class="btn btn-secondary" (click)="irARuta(artista.id)">Ver más</button>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-8">
-            <div class="col-md-6 bg-warning">
-                <p>"Los artistas conceptuales son místicos más</p>
-                <p>que racionalistas. Llegan a conclusiones a las</p>
-                <p>que no llega la lógica" - Sol LeWitt</p>
+        <div class="barraNegra">
+                <img src="assets/barraNegra.png" style="width: 100%;" alt="barra negra">
+        </div>
+    </div>
+    
+    <div class="container-fluid" id="artistas"> 
+        <div class="row">
+            <div class="row subtitulos">
+                <div class="col-1">
+    
+                </div>
+                <div class="col">
+                    <h4>Our <b>Artist</b></h4>
+                </div>
             </div>
-            <div id="busquedaContenedor">
-                <input id="busqueda" class="input-rounded" type="text"  name="filterArtista" [(ngModel)]="filterArtista">
-                <span class="material-icons">search</span>
+            <ngb-carousel class="carruselEpico" *ngIf="5 > artistas.length">
+                <ng-template ngbSlide *ngFor="let artista of artistas">
+                    <div class="row">
+                        <div class="col-md-1 bodyCarousel"></div>
+                        <div class="bodyCarousel col-md-3">
+                          <img [src]=artista.fotoDePerfilULR alt="fotos epicas" class="imagenesArtistas">
+                        </div>
+                        <div class="bodyCarousel col-md-6">
+                          <h3>{{artista.nombreArtista}}</h3>
+                          <p>{{artista.descripcion}}</p>
+                          <button class="btn btn-secondary" (click)="irARuta(artista.id)">Ver más</button>
+                        </div> 
+                        <div class="bodyCarousel col-md-2"></div>
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+            <ngb-carousel class="carruselEpico" *ngIf="artistas.length > 4">
+                <ng-template ngbSlide *ngFor="let artista of artistasRandom">
+                    <div class="row">
+                        <div class="bodyCarousel col-md-1">
+    
+                        </div>
+                        <div class="bodyCarousel col-md-3">
+                            <img [src]=artista.fotoDePerfilULR alt="Random first slide" class="imagenesArtistas">
+                        </div>
+                        <div class=" col-md-6 bodyCarousel">
+                            <h3>{{artista.nombreArtista}}</h3>
+                            <p>{{artista.descripcion}}</p>
+                        </div>
+                        <div class="bodyCarousel col-md-2"></div>
+                    </div> 
+                </ng-template>
+            </ngb-carousel>
+        </div>
+        <div class="barraNegra">
+            <img src="assets/barraNegra.png" style="width: 100%;" alt="barra negra">
+        </div>
+    </div>
+    
+    
+    
+    <div id= "contendorNoticia"class="container-fluid">
+        <div class="row">
+            <div class="row subtitulos">
+                <div class="col-1">
+    
+                </div>
+                <div class="col">
+                    <h4>News</h4>
+                </div>
             </div>
-            <div *ngFor="let artista of artistas | filter:filterArtista" class="content-cards"> 
-                <div class="card col-md-2" (click)="irARuta(artista.id)">
-                    <div>{{artista.nombreArtista}}</div>
-                    <div> {{artista.nombreReal}} </div>
+            <div class="col-md-3" *ngFor="let item of listaDeNoticias">
+                <div class="contendoreNoticias">
+                    <img src="{{item.imagenURL}}" alt="Galeria noticias" class="imagenesNoticias">
+                    <div class="overlay" (click)="llevarAVista(item.id)">
+                        <h3>{{item.titulo}}</h3>
+                        <h6>Ver más</h6>
+                        <span class="material-icons white md-40">search</span>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    
+        <div class="barraNegra">
+            <img src="assets/barraNegra.png" style="width: 100%;" alt="barra negra">
+        </div>
+    </div>
+    
+    
+    <div class="container-fluid" id="team">
+        <div class="row team">
+            <div class="row subtitulos">
+                <div class="col-1">
+    
+                </div>
+                <div class="col">
+                    <h4>TeamWork</h4>
+                </div>
+            </div>
+            <div class="col-md-4" *ngFor="let item of arregloDeTeam">
+                <app-team-pag [integranteDeTeam]="item">
+                </app-team-pag>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid footer">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <h4>About</h4>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d107015.63980310119!2d-71.68108870271243!3d-33.050180880497635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9689dde3de20cec7%3A0xeb0a3a8cbfe19b76!2sValpara%C3%ADso!5e0!3m2!1ses-419!2scl!4v1638278871934!5m2!1ses-419!2scl" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+            </div>
+    
+            <div class="col-md-3"></div>
+    
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-12"><h4 style="color: white;"><br><br><br>DIRECCIÓN</h4></div>
+                    <div clas="col-md-12"><h6 style="color: white;">XXXXXXXXXXXXXXXXXXXXXXXXXXXX</h6></div>
+                    <div class="col-md-12"><h4 style="color: white;"><br><br>TELÉFONO</h4></div>
+                    <div clas="col-md-12"><h6 style="color: white;">XXXXXXXXXXXXXXXXXXXXXXXXXXXX</h6></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div>
-
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3" *ngFor="let item of listaDeNoticias">
-            <div class="contendoreNoticias">
-                <img src="{{item.imagenURL}}" alt="Galeria noticias" class="imagenesNoticias">
-                <div class="overlay">
-                    <h1>{{item.titulo}}</h1>
-                    <span class="material-icons white md-40">search</span>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-
-</div>
-
-
-<div class="container-fluid">
-    <div class="row team">
-        <div class="col-md-4" *ngFor="let item of arregloDeTeam">
-            <app-team-pag [integranteDeTeam]="item">
-
-            </app-team-pag>
-        </div>
-    </div>
-</div>
 
 

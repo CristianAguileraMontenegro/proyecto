@@ -66,7 +66,7 @@ export class PerfilAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("hola")
+    
     this.listaDeNoticias.length = 0;
     this.listaDeIntegrantes.length = 0;
     this.listaDeArtistas.length = 0;
@@ -332,7 +332,6 @@ export class PerfilAdminComponent implements OnInit {
       for (let index = 0; index < Observador.length && flag; index++) {
           if(Observador[index].name == noticiaEditar.imagenURL){
             this.imagenMostrar = Observador[index].url;
-            console.log(this.imagenMostrar);
             flag = false;
           }
         

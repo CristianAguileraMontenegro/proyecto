@@ -86,31 +86,7 @@ export class PerfilComponent implements OnInit {
       this.obtenerImagenesPerfil();
       this.obtenerArtista();
       
-    
 
-
-
-    
-      
-    
-    /*for(let i = 0; i <  this.artistaActual.obrasArtista.length; i++)
-    {
-      this.hayObras = true;
-      this.almacenadorDeImagenes.push(this.artistaActual.obrasArtista[i].url);
-      
-      let reader = new FileReader();
-      reader.readAsDataURL( this.artistaActual.obrasArtista[i].archivo); // es usado para leer el contenido del especificado Blob o File, luego de que se lea y se genera la bse 64 se pone readyState en done y se llama inmediatamanet a onload
-      reader.onload = () =>{
-        
-      }
-    }
-    
-    
-    let reader = new FileReader();
-    reader.readAsDataURL(this.artistaActual.fotoDePerfil); // es usado para leer el contenido del especificado Blob o File, luego de que se lea y se genera la bse 64 se pone readyState en done y se llama inmediatamanet a onload
-    reader.onload = () =>{
-      this.imgenUrl = reader.result;
-    }*/
   }
 
   //--------------------------Imagnes------------------------------
@@ -146,7 +122,6 @@ export class PerfilComponent implements OnInit {
       for (let i = 0; i <  Observador.items.length; i++) 
       {
         this.nombreDeObras.push(Observador.items[i]);
-        console.log(Observador.items[i]);
       }
     });
   }
@@ -172,13 +147,13 @@ export class PerfilComponent implements OnInit {
   obtenerArtista(){
     this.servicioArtistas.consultarArtistaEspecifco(this.artistaRecibido).subscribe(Observador=>{
         
-      console.log("llegue");
+      
       let flag:boolean = true;
       
       
       for (let j = 0; j < this.imageInfos.length && flag; j++) {
           
-        console.log("hola"+j);
+        
         if(this.imageInfos[j].name == Observador.items[0].fotoDePerfilULR){
             
             flag = false;
@@ -213,11 +188,12 @@ export class PerfilComponent implements OnInit {
     let nombreObra:any = document.getElementById("nombreObra");
     let descripcionObra:any = document.getElementById("descripcionObra");
     let url:string = '../../assets/obras/'+this.imgenUrl;
+
+    this.i = this.obras.length+1;
     let obraAgregar:Obras = {id:this.i,nombre:nombreObra.value,descripcion:descripcionObra.value, ulr:this.imgenUrl, idArtista:this.artistaActual.id};
     
     
     if(this.validacionNombreObra() == true){
-      console.log("soy drogadicto mama");
       return false
     }
 
@@ -249,17 +225,7 @@ export class PerfilComponent implements OnInit {
     return true;//retornamos true ya que se agrego la obra correctamente
   }
 
-  /*srcObras(obras:any){
-    let reader = new FileReader();
-    
-    
-    reader.onload = (event:any) =>{
-      this.obrasUrl = event.target.result;
-    }
-    reader.readAsDataURL(obras.archivo);
-
-    //console.log(this.obrasUrl);
-  }*/
+ 
 
   modificarImagen(){
     let input:any = document.getElementById("fotoDePerfilInput");//obtenemos el input de imagen
@@ -306,21 +272,6 @@ export class PerfilComponent implements OnInit {
         flagNombreObraArtista = true;
       }
     }
-    
-    /*for(let i = 0; i < this.listaArtistas.length; i++)
-    {
-      nombreGoblal =  this.listaArtistas[i].obrasArtista.find((o:any) => o.nombre == nombreObra);
-      if(nombreGoblal == nombreObra)
-      {
-        return true;
-      }
-    }
-
-    for (let index = 0; index < this.artistaActual.obrasArtista.length; index++) {
-      if(this.artistaActual.obrasArtista[index].nombre == nombreObra.value){
-          return true;
-      }
-    }*/
 
     console.log(flagNombreObra,flagNombreObraArtista);
 
@@ -424,21 +375,6 @@ export class PerfilComponent implements OnInit {
       }
     }
 
-    
-    /*for(let i = 0; i < this.listaArtistas.length; i++)
-    {
-      nombreGoblal =  this.listaArtistas[i].obrasArtista.find((o:any) => o.nombre == nombreObra);
-      if(nombreGoblal == nombreObra)
-      {
-        return true;
-      }
-    }
-
-    for (let index = 0; index < this.artistaActual.obrasArtista.length; index++) {
-      if(this.artistaActual.obrasArtista[index].nombre == nombreObra.value){
-          return true;
-      }
-    }*/
 
     if (flagNombreObra == true || flagNombreObraArtista == true) {
 
@@ -456,7 +392,7 @@ export class PerfilComponent implements OnInit {
     let url:string = '../../assets/obras/'+this.imgenUrl;
 
 
-    console.log(this.almacenadorDeImagenes);
+    console.log(descripcionObraEditar.value);
     
     if(this.validacionNombreObraEditar() == true){
       return false

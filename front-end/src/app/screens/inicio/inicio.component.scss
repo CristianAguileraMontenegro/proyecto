@@ -1,23 +1,42 @@
-#img{
-    position: relative; 
-}
-
-#content-cards{
-
-    display: flex;
-    flex-wrap: wrap;
-
-}
-
 //imagen
-
+.TodoInicio{
+    margin-top:30px;
+}
 #img{
-    position: relative;
-    height: 30%;
+
+    width: 425px;
+    height:400px;
 }
 
+.imagenesArtistas{ //esto se a cambiao tio
 
+    width:300px;
+    height:300px;
+    border-radius:150px;
+    border:10px solid #666;
 
+}
+
+.imgPErfil{
+
+    width: 200px;
+    height: 150px;
+}
+.sr-only{  //esto tambien tio
+    display:none;
+}
+
+.bodyCarousel{ // x3
+    
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #cccac9;
+}
+
+.barraNegra {
+    margin-top: 120px;
+    margin-bottom: 65px;
+}
 
 //barra de busqueda
 .input-rounded {
@@ -42,7 +61,7 @@
 }
 
 #busquedaContenedor span {
-    position:absolute;
+    // position:absolute;
     left:0;
     top:10px;
     padding:10px 10px;
@@ -50,13 +69,20 @@
 }
 
 .contendoreNoticias{
-    position: relative;
+    border-radius: 10px;
+    position:relative;
+    margin: 15px;
+    box-shadow: 0px 8px 10px rgba(0,0,0,0.50);
+    overflow: hidden;
 }
 
 .imagenesNoticias{
     display: block;
     width: 100%;
     height: 385px;
+    cursor: pointer;
+    border-radius: 5px;
+    object-fit: cover;
 }
 
 .overlay{
@@ -76,17 +102,41 @@
     transition: opacity 0.25s;
 }
 
+.footer{
+    background-color: black;
+    padding-bottom: 20px;
+    
+    padding-top:50px;
+}
+
+
+#team{
+    margin-bottom: 50px;
+}
+
 
 .overlay > *{
     transform: translateY(20px);
     transition: transform 0.25s;
 }
 
-
 .overlay:hover{
     opacity: 1;
+    cursor: pointer;
 }
 
 .overlay:hover > *{
     transform: translateY(0);
+}
+
+.carruselEpico .carousel-inner div span{
+    display: none;
+}
+
+h4{
+    color: gray;
+}
+.card{
+    // justify-items: center;
+    margin-top: 40px;
 }

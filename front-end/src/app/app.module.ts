@@ -17,7 +17,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 import {HttpClientModule} from '@angular/common/http';
-import { PerfilPublicoViewComponent } from './screens/perfil-publico-view/perfil-publico-view.component' //para conectar con back-end
+import { PerfilPublicoViewComponent } from './screens/perfil-publico-view/perfil-publico-view.component';
+import { NoticiaViewComponent } from './screens/noticia-view/noticia-view.component' //para conectar con back-end
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { PerfilPublicoViewComponent } from './screens/perfil-publico-view/perfil
     FilterPipe,
     PerfilAdminComponent,
     PerfilPublicoViewComponent,
+    NoticiaViewComponent,
   ],
   imports: [
     BrowserModule,

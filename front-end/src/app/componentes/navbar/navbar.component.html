@@ -1,33 +1,32 @@
-<nav class="nav nav-expand-lg nav-dark bg-dark">
-    <div class="container-fluid">
-      <div class="bd-example" id="navbarColor01">
-        <ul class="nav justify-content-center">
-          <li class="nav-item">
-            <a class="nav-link" href="#" [routerLink]="['/inicio']" >Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Artist</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" >News</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" >Team</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" >About</a>
-          </li>
-          <li class="nav-item registroLogin">
-            <a class="nav-link" href="#" [routerLink]="['/login']" >Sign up</a>
-          </li>
-          <li class="nav-item registroLogin">
-            <a class="nav-link" href="#" [routerLink]="['/registro']">Register</a>
-          </li>
-        </ul>
-      </div>
+<nav class="nav nav-expand-lg nav-dark bg-light ">
+  <div class="container-fluid">
+    <div class="bd-example" id="navbarColor01">
+      <ul class="nav justify-content-center ">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="#" [routerLink]="['/inicio']" ><h5>Home</h5></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" [routerLink]="['/inicio']" (click)="scroll('artistas')"><h5>Artist</h5> </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" [routerLink]="['/inicio']" (click)="scroll('contendorNoticia')" ><h5>News</h5> </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" [routerLink]="['/inicio']" (click)="scroll('team')"><h5>Team</h5> </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="#" ><h5>About</h5> </a>
+        </li>
+        <li class="nav-item registroLogin">
+          <a class="nav-link text-dark" href="#" [routerLink]="['/login']" ><h5>Sign up</h5> </a>
+        </li>
+        <li class="nav-item registroLogin">
+          <a class="nav-link text-dark" href="#" [routerLink]="['/registro']"><h5>Register</h5> </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </nav>
-
 
 
   

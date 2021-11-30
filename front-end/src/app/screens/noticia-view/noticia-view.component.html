@@ -1,0 +1,31 @@
+<div *ngIf="flag == true">
+    <div class="container-fluid" id="contenedorNoticia">
+        <div class="row gx-3">
+            <div class="col-md-8 col-sm-6">
+                <div class="row gx-3">
+                    <div class="col-md-5 col-sm-3" id="contenedorImagenNoticia">
+                        <img [src]=noticiaActual.imagenURL class="img-fluid" alt="Imagen noticia">
+                    </div>
+                    <div class="col-md-6 col-sm-7" id="textoNoticia">
+                        <h3>{{noticiaActual.titulo}}</h3>
+                        <p>{{noticiaActual.texto}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="listOtrasNoticias" class="col-md-4 col-sm-3">
+                <div class="container-fluid otrasNoticias">
+                    <div class="row noticiaExtra" *ngFor="let noticiaR of noticiasRandom">
+                        <div class="col-md-3 miniImg">
+                            <img [src]=noticiaR.imagenURL class="img-fluid" alt="MiniImagen">
+                        </div>
+                        <div class="col-md-6">
+                            <h5>{{noticiaR.titulo}}</h5>
+                            <button class="btn btn-outline-secondary" (click)="llevarAVista(noticiaR.id)" >Ver mas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
